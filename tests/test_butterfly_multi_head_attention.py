@@ -60,3 +60,62 @@ def test_requires_power_of_two_d_model() -> None:
     with pytest.raises(ValueError, match="power of two"):
         ButterflyMultiHeadAttention(d_model=12, num_heads=4)
 
+
+def test_output_parity_with_baseline_via_from_linear() -> None:
+    """ButterflyMultiHeadAttention fitted from a baseline should produce equivalent output."""
+    torch.manual_seed(42)
+    d_model, num_heads = 16, 4
+
+    baseline = MultiHeadAttention(d_model=d_model, num_heads=num_heads, dropout=0.0)
+    baseline.eval()
+
+    butterfly = ButterflyMultiHeadAttention(d_model=d_model, num_heads=num_heads, dropout=0.0)
+    butterfly.eval()
+
+    # Fit each butterfly projection from the corresponding baseline projection
+    with torch.no_grad():
+        butterfly.query = ButterflyLinear.from_linear(baseline.query, seed=0)
+        butterfly.key = ButterflyLinear.from_linear(baseline.key, seed=1)
+        butterfly.value = ButterflyLinear.from_linear(baseline.value, seed=2)
+        butterfly.out = ButterflyLinear.from_linear(baseline.out, seed=3)
+
+    x = torch.randn(4, 8, d_model)
+
+    with torch.no_grad():
+        baseline_out = baseline(x)
+        butterfly_out = butterfly(x)
+
+    assert torch.allclose(baseline_out, butterfly_out, atol=1e-3, rtol=1e-3), (
+        f"Max diff: {(baseline_out - butterfly_out).abs().max().item():.6f}"
+    )
+
+
+def test_output_parity_with_mask() -> None:
+    """Parity should hold with masking applied."""
+    torch.manual_seed(123)
+    d_model, num_heads = 16, 4
+
+    baseline = MultiHeadAttention(d_model=d_model, num_heads=num_heads, dropout=0.0)
+    baseline.eval()
+
+    butterfly = ButterflyMultiHeadAttention(d_model=d_model, num_heads=num_heads, dropout=0.0)
+    butterfly.eval()
+
+    with torch.no_grad():
+        butterfly.query = ButterflyLinear.from_linear(baseline.query, seed=0)
+        butterfly.key = ButterflyLinear.from_linear(baseline.key, seed=1)
+        butterfly.value = ButterflyLinear.from_linear(baseline.value, seed=2)
+        butterfly.out = ButterflyLinear.from_linear(baseline.out, seed=3)
+
+    x = torch.randn(4, 8, d_model)
+    mask = torch.zeros(4, 8, dtype=torch.bool)
+    mask[:, -2:] = True
+
+    with torch.no_grad():
+        baseline_out = baseline(x, mask=mask)
+        butterfly_out = butterfly(x, mask=mask)
+
+    assert torch.allclose(baseline_out, butterfly_out, atol=1e-3, rtol=1e-3), (
+        f"Max diff: {(baseline_out - butterfly_out).abs().max().item():.6f}"
+    )
+
