@@ -27,12 +27,9 @@ y = mlp(x)
 ### Attention
 
 ```python
-from sparse_layers import ButterflyMultiHeadAttention, MultiHeadAttention
+from sparse_layers import ButterflyMultiHeadAttention
 
-# Standard multi-head attention
-attn = MultiHeadAttention(d_model=256, num_heads=8)
-
-# Butterfly-factorized variant (fewer parameters, same interface)
+# Multi-head attention with butterfly-factorized Q/K/V projections
 bf_attn = ButterflyMultiHeadAttention(d_model=256, num_heads=8)
 
 seq = torch.randn(32, 128, 256)  # (batch, seq_len, d_model)
@@ -44,7 +41,7 @@ out = bf_attn(seq, seq, seq)
 State Space Exploration modules for efficient sequence modeling with sparse attention patterns.
 
 ```python
-from sparse_layers.sse import SSEAttention, SSEAttentionConfig
+from sparse_layers.modules import SSEAttention, SSEAttentionConfig
 
 config = SSEAttentionConfig(d_model=256, num_partitions=4)
 sse = SSEAttention(config)
@@ -53,34 +50,46 @@ x = torch.randn(32, 128, 256)
 out = sse(x)
 ```
 
-## Modules
+## Architecture
 
-### Layers (`sparse_layers.layers`)
+Organized following the [Flash-Attention](https://github.com/Dao-AILab/flash-attention) pattern:
+
+### Ops (`sparse_layers.ops`)
+
+Primitive operations and utility functions.
+
+| Module | Description |
+|--------|-------------|
+| `butterfly` | Butterfly factor multiply, power-of-2 utilities |
+| `SSEMaskingOps` | Masking utilities for variable-length SSE |
+| `SSEVarlenOps` | Variable-length sequence operations |
+
+### Modules (`sparse_layers.modules`)
+
+Composable building blocks — single units of computation.
 
 | Module | Description |
 |--------|-------------|
 | `ButterflyLinear` | Linear layer using butterfly matrix factorization — O(n log n) parameters instead of O(n²) |
 | `PaddedButterflyLinear` | ButterflyLinear with automatic padding for non-power-of-2 dimensions |
-| `ButterflyMLP` | Two-layer MLP with butterfly-factorized linear layers |
-| `ButterflyMultiHeadAttention` | Multi-head attention with butterfly-factorized Q/K/V projections |
-| `MultiHeadAttention` | Standard multi-head attention (baseline) |
-| `CustomLinear` | Linear layer with pluggable weight initialization |
-| `CustomMLP` | MLP with CustomLinear layers |
-| `SimpleMLP` | Minimal MLP baseline |
-
-### SSE (`sparse_layers.sse`)
-
-| Module | Description |
-|--------|-------------|
 | `SSEAttention` | Sparse attention with state-space-inspired partitioning |
 | `SSEAttentionAdaptive` | SSE with adaptive implementation selection (naive/batched) |
-| `SSEMultiHeadAttention` | Multi-head variant of SSE attention |
 | `SSEMultiPartitionState` | Manages partition states across sequence chunks |
 | `SSEPartitionSelector` | Selects active partitions per query position |
 | `SSESparseSoftmax` | Sparse softmax over selected partitions |
 | `LinearAttention` | Linear attention baseline (O(n) complexity) |
-| `SSEMaskingOps` | Masking utilities for variable-length SSE |
-| `SSEVarlenOps` | Variable-length sequence operations |
+
+### Models (`sparse_layers.models`)
+
+Composed architectures built from modules.
+
+| Module | Description |
+|--------|-------------|
+| `ButterflyMLP` | Two-layer MLP with butterfly-factorized linear layers |
+| `ButterflyMultiHeadAttention` | Multi-head attention with butterfly-factorized Q/K/V projections |
+| `SSEMultiHeadAttention` | Multi-head variant of SSE attention |
+
+The package also includes baseline implementations (`SimpleMLP`, `CustomMLP`, `CustomLinear`, `MultiHeadAttention`) used internally for validation and testing.
 
 ## License
 
