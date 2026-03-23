@@ -2,12 +2,12 @@ import pytest
 import torch
 from pydantic import ValidationError
 
+from sparse_layers import PaddedButterflyLinear
 from sparse_layers.modules import (
     NaiveSSEAttention,
     SSEAttention,
     SSEAttentionConfig,
 )
-from sparse_layers import PaddedButterflyLinear
 
 
 def _count_trainable_parameters(module: torch.nn.Module) -> int:
@@ -165,9 +165,7 @@ def test_naive_sse_attention_forward_matches_manual_loop():
             v_t = attention.value(token)
 
             k_sparse = attention.sparse_softmax(k_t.unsqueeze(1), partition_indices)
-            gather_index = partition_indices.unsqueeze(-1).expand(
-                -1, -1, -1, state_rows
-            )
+            gather_index = partition_indices.unsqueeze(-1).expand(-1, -1, -1, state_rows)
             selected = torch.gather(k_sparse, dim=2, index=gather_index)
 
             attention.state_mgr.update(
@@ -486,16 +484,10 @@ def test_naive_sse_attention_butterfly_gradient_magnitudes_reasonable():
         [param.grad.norm() for param in dense.parameters() if param.grad is not None]
     ).mean()
     butterfly_grad_norm = torch.stack(
-        [
-            param.grad.norm()
-            for param in butterfly.parameters()
-            if param.grad is not None
-        ]
+        [param.grad.norm() for param in butterfly.parameters() if param.grad is not None]
     ).mean()
 
     ratio = torch.abs(dense_grad_norm - butterfly_grad_norm) / dense_grad_norm
     assert ratio.item() < 5.0
     assert torch.isfinite(butterfly_inputs.grad).all()
     assert torch.isfinite(dense_inputs.grad).all()
-
-

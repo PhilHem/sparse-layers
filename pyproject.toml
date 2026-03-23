@@ -28,7 +28,7 @@ Homepage = "https://github.com/PhilHem/sparse-layers"
 Repository = "https://github.com/PhilHem/sparse-layers"
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-xdist>=3.8.0,<4", "pytest-cov>=7.0.0,<8"]
+dev = ["pytest", "pytest-xdist>=3.8.0,<4", "pytest-cov>=7.0.0,<8", "ruff", "pyrefly"]
 
 [build-system]
 build-backend = "hatchling.build"
@@ -44,3 +44,14 @@ addopts = "-v --tb=short"
 [tool.coverage.run]
 source = ["src/sparse_layers"]
 omit = ["*/tests/*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pyrefly]
+project_includes = ["src"]

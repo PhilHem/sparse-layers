@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import torch
-from torch import Tensor, nn
-
 from pydantic import BaseModel, ConfigDict, Field
+from torch import Tensor, nn
 
 
 class LinearAttentionConfig(BaseModel):
@@ -43,9 +42,7 @@ class LinearAttention(nn.Module):
 
         batch_size, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         query = self.query(x)
         key = self.key(x)
@@ -75,7 +72,4 @@ class LinearAttention(nn.Module):
         return self.output(stacked)
 
     def extra_repr(self) -> str:
-        return (
-            f"d_model={self.d_model}, d_state={self.d_state}, "
-            f"dropout={self.config.dropout}"
-        )
+        return f"d_model={self.d_model}, d_state={self.d_state}, dropout={self.config.dropout}"

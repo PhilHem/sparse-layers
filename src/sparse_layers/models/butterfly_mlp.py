@@ -5,9 +5,9 @@ from collections.abc import Sequence
 import torch
 from torch import nn
 
-from sparse_layers.ops.butterfly import _is_power_of_two
-from sparse_layers.modules.butterfly_linear import ButterflyLinear
 from sparse_layers.models._baselines import SimpleMLP
+from sparse_layers.modules.butterfly_linear import ButterflyLinear
+from sparse_layers.ops.butterfly import _is_power_of_two
 
 
 class ButterflyMLP(nn.Module):
@@ -38,9 +38,7 @@ class ButterflyMLP(nn.Module):
         self.network = nn.Sequential(*modules)
 
     @staticmethod
-    def _validate_dimensions(
-        input_dim: int, hidden_dims: Sequence[int], output_dim: int
-    ) -> None:
+    def _validate_dimensions(input_dim: int, hidden_dims: Sequence[int], output_dim: int) -> None:
         if input_dim <= 0:
             raise ValueError("input_dim must be a positive integer")
 
@@ -82,7 +80,7 @@ class ButterflyMLP(nn.Module):
         if len(sparse_layers) != len(dense_layers):
             raise RuntimeError("Unexpected layer mismatch during conversion to SimpleMLP")
 
-        for butterfly_layer, dense_layer in zip(sparse_layers, dense_layers):
+        for butterfly_layer, dense_layer in zip(sparse_layers, dense_layers, strict=False):
             converted = butterfly_layer.to_linear()
             with torch.no_grad():
                 dense_layer.weight.copy_(converted.weight)
@@ -100,7 +98,7 @@ class ButterflyMLP(nn.Module):
         optimization_steps: int = 4000,
         learning_rate: float = 0.1,
         tolerance: float = 1e-7,
-    ) -> "ButterflyMLP":
+    ) -> ButterflyMLP:
         """Construct a :class:`ButterflyMLP` from a compatible :class:`SimpleMLP`."""
 
         linear_layers = [module for module in model.modules() if isinstance(module, nn.Linear)]
@@ -111,13 +109,9 @@ class ButterflyMLP(nn.Module):
         layer_dims = []
         for layer in linear_layers:
             if layer.in_features != layer.out_features:
-                raise ValueError(
-                    "ButterflyMLP.from_simple_mlp requires square nn.Linear layers"
-                )
+                raise ValueError("ButterflyMLP.from_simple_mlp requires square nn.Linear layers")
             if not _is_power_of_two(layer.in_features):
-                raise ValueError(
-                    "ButterflyMLP.from_simple_mlp requires power-of-two dimensions"
-                )
+                raise ValueError("ButterflyMLP.from_simple_mlp requires power-of-two dimensions")
             layer_dims.append(layer.in_features)
 
         input_dim = linear_layers[0].in_features
@@ -133,7 +127,9 @@ class ButterflyMLP(nn.Module):
         if len(butterfly_indices) != len(linear_layers):
             raise RuntimeError("Unexpected layer mismatch during reconstruction from SimpleMLP")
 
-        for index, (linear_layer, target_idx) in enumerate(zip(linear_layers, butterfly_indices)):
+        for _index, (linear_layer, target_idx) in enumerate(
+            zip(linear_layers, butterfly_indices, strict=False)
+        ):
             converted = ButterflyLinear.from_linear(
                 linear_layer,
                 seed=seed,

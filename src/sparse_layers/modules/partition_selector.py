@@ -10,9 +10,7 @@ class SSEPartitionSelectorConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     d_model: int = Field(gt=0, description="Model dimension of the input features")
-    num_partitions: int = Field(
-        gt=1, description="Total number of memory partitions available"
-    )
+    num_partitions: int = Field(gt=1, description="Total number of memory partitions available")
     k: int = Field(gt=0, description="Number of partitions to select per token")
 
     @field_validator("k")
@@ -20,9 +18,7 @@ class SSEPartitionSelectorConfig(BaseModel):
     def validate_k_within_partitions(cls, value: int, info: ValidationInfo) -> int:
         num_partitions = info.data.get("num_partitions")
         if num_partitions is not None and value > num_partitions:
-            raise ValueError(
-                f"k={value} must be <= num_partitions={num_partitions}"
-            )
+            raise ValueError(f"k={value} must be <= num_partitions={num_partitions}")
         return value
 
 
@@ -49,15 +45,11 @@ class SSEPartitionSelector(nn.Module):
             )
 
         if x.shape[-1] != self.d_model:
-            raise ValueError(
-                f"Expected final dimension {self.d_model}, found {x.shape[-1]}"
-            )
+            raise ValueError(f"Expected final dimension {self.d_model}, found {x.shape[-1]}")
 
         bias_scores = self.linear(x)
         _, top_indices = bias_scores.topk(self.k, dim=-1)
         return top_indices
 
     def extra_repr(self) -> str:
-        return (
-            f"d_model={self.d_model}, num_partitions={self.num_partitions}, k={self.k}"
-        )
+        return f"d_model={self.d_model}, num_partitions={self.num_partitions}, k={self.k}"

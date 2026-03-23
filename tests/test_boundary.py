@@ -1,7 +1,5 @@
 """Verify sparse-layers has no infrastructure dependencies."""
 
-import subprocess
-import sys
 from pathlib import Path
 
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent / "src" / "sparse_layers"

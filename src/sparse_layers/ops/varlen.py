@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import torch
-from torch import Tensor, nn
-
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
+from torch import Tensor, nn
 
 
 class SSEVarlenOpsConfig(BaseModel):
@@ -15,9 +14,7 @@ class SSEVarlenOpsConfig(BaseModel):
     num_partitions: int = Field(
         gt=1, description="Total number of partitions maintained for sparse state"
     )
-    k: int = Field(
-        gt=0, description="Number of partitions selected per token for sparse routing"
-    )
+    k: int = Field(gt=0, description="Number of partitions selected per token for sparse routing")
     return_inverse: bool = Field(
         default=False,
         description="If True, forward returns mapping tensor to restore original order",
@@ -28,9 +25,7 @@ class SSEVarlenOpsConfig(BaseModel):
     def validate_k_within_partitions(cls, value: int, info: ValidationInfo) -> int:
         num_partitions = info.data.get("num_partitions")
         if num_partitions is not None and value > num_partitions:
-            raise ValueError(
-                f"k={value} must be <= num_partitions={num_partitions}"
-            )
+            raise ValueError(f"k={value} must be <= num_partitions={num_partitions}")
         return value
 
 
@@ -46,9 +41,7 @@ class SSEVarlenOps(nn.Module):
         self.k = config.k
         self.return_inverse = config.return_inverse
 
-    def forward(
-        self, x: Tensor, partition_indices: Tensor
-    ) -> tuple[Tensor, Tensor, Tensor | None]:
+    def forward(self, x: Tensor, partition_indices: Tensor) -> tuple[Tensor, Tensor, Tensor | None]:
         """
         Reorder tokens by partition to enable efficient sparse processing.
 
@@ -85,10 +78,7 @@ class SSEVarlenOps(nn.Module):
             return empty_tokens, cu_seqlens, inverse
 
         tokens = (
-            x.unsqueeze(2)
-            .expand(-1, -1, self.k, -1)
-            .contiguous()
-            .reshape(batch, -1, self.d_model)
+            x.unsqueeze(2).expand(-1, -1, self.k, -1).contiguous().reshape(batch, -1, self.d_model)
         )
         partitions = partition_indices.reshape(batch, -1)
 
@@ -176,18 +166,14 @@ class SSEVarlenOps(nn.Module):
             raise ValueError("expected input of shape (batch, seq_len, d_model)")
 
         if partition_indices.dim() != 3:
-            raise ValueError(
-                "expected partition_indices with shape (batch, seq_len, k)"
-            )
+            raise ValueError("expected partition_indices with shape (batch, seq_len, k)")
 
         if partition_indices.dtype != torch.long:
             raise ValueError("partition_indices must have dtype torch.long")
 
         batch, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         if partition_indices.shape[0] != batch or partition_indices.shape[1] != seq_len:
             raise ValueError(
@@ -195,17 +181,13 @@ class SSEVarlenOps(nn.Module):
             )
 
         if partition_indices.shape[2] != self.k:
-            raise ValueError(
-                "expected partition_indices last dimension to equal configured k"
-            )
+            raise ValueError("expected partition_indices last dimension to equal configured k")
 
         if partition_indices.numel() > 0:
             min_idx = int(partition_indices.min())
             max_idx = int(partition_indices.max())
             if min_idx < 0 or max_idx >= self.num_partitions:
-                raise ValueError(
-                    "partition_indices contains values outside valid partition range"
-                )
+                raise ValueError("partition_indices contains values outside valid partition range")
 
 
-__all__ = ["SSEVarlenOpsConfig", "SSEVarlenOps"]
+__all__ = ["SSEVarlenOps", "SSEVarlenOpsConfig"]

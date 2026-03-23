@@ -277,7 +277,9 @@ def test_batched_state_reset_clears_memory():
 
 def test_batched_supports_float64_inputs():
     torch.manual_seed(7)
-    attention = _build_batched(d_model=10, num_heads=2, num_partitions=4, k=2, state_rows=5).double()
+    attention = _build_batched(
+        d_model=10, num_heads=2, num_partitions=4, k=2, state_rows=5
+    ).double()
     inputs = torch.randn(2, 3, attention.config.d_model, dtype=torch.float64)
 
     outputs = attention(inputs)
@@ -302,5 +304,3 @@ def test_batched_with_butterfly_reduces_parameter_count():
     butterfly = _build_batched(**kwargs, use_butterfly=True)
 
     assert _count_trainable_parameters(butterfly) < _count_trainable_parameters(dense)
-
-

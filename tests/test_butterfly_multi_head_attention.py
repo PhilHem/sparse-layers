@@ -118,4 +118,3 @@ def test_to_linear_roundtrip_parity_with_mask() -> None:
     assert torch.allclose(butterfly_out, dense_out, atol=1e-4, rtol=1e-4), (
         f"Max diff: {(butterfly_out - dense_out).abs().max().item():.6f}"
     )
-

@@ -3,8 +3,8 @@ from __future__ import annotations
 import math
 
 import torch
-from torch import Tensor, nn
 import torch.nn.functional as F
+from torch import Tensor, nn
 
 from sparse_layers.ops.butterfly import _is_power_of_two
 
@@ -29,9 +29,7 @@ class ButterflyLinear(nn.Module):
             raise ValueError("ButterflyLinear requires in_features == out_features")
 
         if not _is_power_of_two(in_features):
-            raise ValueError(
-                "ButterflyLinear requires dimensions that are a power of two"
-            )
+            raise ValueError("ButterflyLinear requires dimensions that are a power of two")
 
         self.in_features = in_features
         self.out_features = out_features
@@ -61,7 +59,7 @@ class ButterflyLinear(nn.Module):
         learning_rate: float = 0.1,
         tolerance: float = 1e-7,
         seed: int | None = None,
-    ) -> "ButterflyLinear":
+    ) -> ButterflyLinear:
         """Construct a butterfly layer approximating a dense :class:`nn.Linear`.
 
         The method uses gradient-based fitting over the canonical basis to match
@@ -111,7 +109,7 @@ class ButterflyLinear(nn.Module):
 
         best_loss = float("inf")
 
-        for step in range(optimization_steps):
+        for _step in range(optimization_steps):
             optimizer_adam.zero_grad()
             output = result(eye_input)
             loss = F.mse_loss(output, target)
@@ -152,9 +150,7 @@ class ButterflyLinear(nn.Module):
 
     def forward(self, input: Tensor) -> Tensor:
         if input.shape[-1] != self.in_features:
-            raise ValueError(
-                f"Expected last dimension {self.in_features}, got {input.shape[-1]}"
-            )
+            raise ValueError(f"Expected last dimension {self.in_features}, got {input.shape[-1]}")
 
         original_shape = input.shape[:-1]
         x = input.reshape(-1, self.in_features)

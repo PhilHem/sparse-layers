@@ -24,16 +24,12 @@ class SSEMultiHeadAttentionConfig(BaseModel):
 
     d_model: int = Field(gt=0, description="Input feature dimension")
     num_heads: int = Field(gt=0, description="Number of parallel attention heads")
-    num_partitions: int = Field(
-        gt=1, description="Total number of sparse state partitions"
-    )
+    num_partitions: int = Field(gt=1, description="Total number of sparse state partitions")
     k: int = Field(
         gt=0,
         description="Number of partitions selected per token for sparse attention",
     )
-    state_rows: int = Field(
-        gt=0, description="Rows per partition maintained by the sparse state"
-    )
+    state_rows: int = Field(gt=0, description="Rows per partition maintained by the sparse state")
     use_butterfly: bool = Field(
         default=False,
         description="Swap dense projections for ButterflyLinear (handled via padding).",
@@ -44,13 +40,11 @@ class SSEMultiHeadAttentionConfig(BaseModel):
     def validate_k_within_partitions(cls, value: int, info: ValidationInfo) -> int:
         num_partitions = info.data.get("num_partitions")
         if num_partitions is not None and value > num_partitions:
-            raise ValueError(
-                f"k={value} must be <= num_partitions={num_partitions}"
-            )
+            raise ValueError(f"k={value} must be <= num_partitions={num_partitions}")
         return value
 
     @model_validator(mode="after")
-    def validate_divisible_d_model(self) -> "SSEMultiHeadAttentionConfig":
+    def validate_divisible_d_model(self) -> SSEMultiHeadAttentionConfig:
         if self.d_model % self.num_heads != 0:
             raise ValueError(
                 f"d_model={self.d_model} must be divisible by num_heads={self.num_heads}"
@@ -77,9 +71,7 @@ class NaiveSSEMultiHeadAttention(nn.Module):
             use_butterfly=config.use_butterfly,
         )
 
-        self.heads = nn.ModuleList(
-            [SSEAttention(attention_config) for _ in range(self.num_heads)]
-        )
+        self.heads = nn.ModuleList([SSEAttention(attention_config) for _ in range(self.num_heads)])
 
         output_layer_cls = PaddedButterflyLinear if config.use_butterfly else nn.Linear
         self.output = output_layer_cls(self.d_model, self.d_model)
@@ -90,9 +82,7 @@ class NaiveSSEMultiHeadAttention(nn.Module):
 
         batch, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         if seq_len == 0:
             return torch.zeros(
@@ -190,7 +180,7 @@ class SSEMultiHeadAttention(nn.Module):
 
 
 __all__ = [
-    "SSEMultiHeadAttentionConfig",
     "NaiveSSEMultiHeadAttention",
     "SSEMultiHeadAttention",
+    "SSEMultiHeadAttentionConfig",
 ]

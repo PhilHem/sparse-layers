@@ -13,15 +13,18 @@ def test_masking_config_accepts_valid_values():
     assert config.k == 4
 
 
-@pytest.mark.parametrize("field, value", [
-    ("d_model", 0),
-    ("d_model", -1),
-    ("num_partitions", 0),
-    ("num_partitions", 1),
-    ("num_partitions", -3),
-    ("k", 0),
-    ("k", -5),
-])
+@pytest.mark.parametrize(
+    "field, value",
+    [
+        ("d_model", 0),
+        ("d_model", -1),
+        ("num_partitions", 0),
+        ("num_partitions", 1),
+        ("num_partitions", -3),
+        ("k", 0),
+        ("k", -5),
+    ],
+)
 def test_masking_config_rejects_non_positive_fields(field, value):
     kwargs = dict(d_model=32, num_partitions=4, k=2)
     kwargs[field] = value
@@ -53,7 +56,9 @@ def _build_config(**overrides) -> SSEMaskingOpsConfig:
     return SSEMaskingOpsConfig(**defaults)
 
 
-def _naive_masking(x: torch.Tensor, partition_indices: torch.Tensor, num_partitions: int) -> torch.Tensor:
+def _naive_masking(
+    x: torch.Tensor, partition_indices: torch.Tensor, num_partitions: int
+) -> torch.Tensor:
     batch, seq_len, d_model = x.shape
     output = torch.zeros(batch, seq_len, num_partitions, d_model, dtype=x.dtype, device=x.device)
 
@@ -106,7 +111,11 @@ def test_masking_ops_handles_various_sequence_lengths(seq_len):
     torch.manual_seed(2)
     module = _build_module(d_model=8, num_partitions=5, k=2)
     x = torch.randn(3, seq_len, module.config.d_model)
-    partition_indices = torch.randint(0, module.num_partitions, (3, seq_len, module.k)) if seq_len > 0 else torch.empty(3, 0, module.k, dtype=torch.long)
+    partition_indices = (
+        torch.randint(0, module.num_partitions, (3, seq_len, module.k))
+        if seq_len > 0
+        else torch.empty(3, 0, module.k, dtype=torch.long)
+    )
 
     output = module(x, partition_indices)
 

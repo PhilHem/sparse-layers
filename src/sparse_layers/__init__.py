@@ -7,9 +7,9 @@ from sparse_layers.models import (
     CustomMLP,
     MultiHeadAttention,
     NaiveSSEMultiHeadAttention,
+    SimpleMLP,
     SSEMultiHeadAttention,
     SSEMultiHeadAttentionConfig,
-    SimpleMLP,
 )
 from sparse_layers.modules import (
     ButterflyLinear,
@@ -39,35 +39,35 @@ from sparse_layers.ops import (
 __all__ = [
     # Modules
     "ButterflyLinear",
+    # Models
+    "ButterflyMLP",
+    "ButterflyMultiHeadAttention",
+    # Baselines (for validation/benchmarking)
+    "CustomLinear",
+    "CustomMLP",
     "LinearAttention",
     "LinearAttentionConfig",
+    "MultiHeadAttention",
     "NaiveMultiPartitionState",
     "NaiveSSEAttention",
+    "NaiveSSEMultiHeadAttention",
     "PaddedButterflyLinear",
     "SSEAttention",
     "SSEAttentionAdaptive",
     "SSEAttentionAdaptiveConfig",
     "SSEAttentionConfig",
+    # Ops
+    "SSEMaskingOps",
+    "SSEMaskingOpsConfig",
+    "SSEMultiHeadAttention",
+    "SSEMultiHeadAttentionConfig",
     "SSEMultiPartitionState",
     "SSEMultiPartitionStateConfig",
     "SSEPartitionSelector",
     "SSEPartitionSelectorConfig",
     "SSESparseSoftmax",
     "SSESparseSoftmaxConfig",
-    # Ops
-    "SSEMaskingOps",
-    "SSEMaskingOpsConfig",
     "SSEVarlenOps",
     "SSEVarlenOpsConfig",
-    # Models
-    "ButterflyMLP",
-    "ButterflyMultiHeadAttention",
-    "NaiveSSEMultiHeadAttention",
-    "SSEMultiHeadAttention",
-    "SSEMultiHeadAttentionConfig",
-    # Baselines (for validation/benchmarking)
-    "CustomLinear",
-    "CustomMLP",
-    "MultiHeadAttention",
     "SimpleMLP",
 ]

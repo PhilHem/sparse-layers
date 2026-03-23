@@ -30,4 +30,3 @@ def test_mask_shape_mismatch_raises_value_error():
 
     with pytest.raises(ValueError, match="mask shape must match"):
         module(inputs, mask=mask)
-

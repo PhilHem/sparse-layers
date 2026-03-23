@@ -15,12 +15,12 @@ __all__ = [
     # Public API
     "ButterflyMLP",
     "ButterflyMultiHeadAttention",
-    "NaiveSSEMultiHeadAttention",
-    "SSEMultiHeadAttention",
-    "SSEMultiHeadAttentionConfig",
     # Baselines (for validation/benchmarking)
     "CustomLinear",
     "CustomMLP",
     "MultiHeadAttention",
+    "NaiveSSEMultiHeadAttention",
+    "SSEMultiHeadAttention",
+    "SSEMultiHeadAttentionConfig",
     "SimpleMLP",
 ]

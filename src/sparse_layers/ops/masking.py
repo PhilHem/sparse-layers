@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import torch
-from torch import Tensor, nn
-
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
+from torch import Tensor, nn
 
 
 class SSEMaskingOpsConfig(BaseModel):
@@ -57,18 +56,14 @@ class SSEMaskingOps(nn.Module):
             raise ValueError("expected input of shape (batch, seq_len, d_model)")
 
         if partition_indices.dim() != 3:
-            raise ValueError(
-                "expected partition_indices with shape (batch, seq_len, k)"
-            )
+            raise ValueError("expected partition_indices with shape (batch, seq_len, k)")
 
         if partition_indices.dtype != torch.long:
             raise ValueError("partition_indices must have dtype torch.long")
 
         batch, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         if partition_indices.shape[0] != batch or partition_indices.shape[1] != seq_len:
             raise ValueError(
@@ -76,17 +71,13 @@ class SSEMaskingOps(nn.Module):
             )
 
         if partition_indices.shape[2] != self.k:
-            raise ValueError(
-                "expected partition_indices last dimension to equal configured k"
-            )
+            raise ValueError("expected partition_indices last dimension to equal configured k")
 
         if partition_indices.numel() > 0:
             min_idx = int(partition_indices.min())
             max_idx = int(partition_indices.max())
             if min_idx < 0 or max_idx >= self.num_partitions:
-                raise ValueError(
-                    "partition_indices contains values outside valid partition range"
-                )
+                raise ValueError("partition_indices contains values outside valid partition range")
 
     def _create_mask(self, partition_indices: Tensor, reference: Tensor) -> Tensor:
         batch, seq_len, _ = partition_indices.shape
@@ -99,9 +90,7 @@ class SSEMaskingOps(nn.Module):
         return mask
 
     def extra_repr(self) -> str:
-        return (
-            f"d_model={self.d_model}, num_partitions={self.num_partitions}, k={self.k}"
-        )
+        return f"d_model={self.d_model}, num_partitions={self.num_partitions}, k={self.k}"
 
 
-__all__ = ["SSEMaskingOpsConfig", "SSEMaskingOps"]
+__all__ = ["SSEMaskingOps", "SSEMaskingOpsConfig"]

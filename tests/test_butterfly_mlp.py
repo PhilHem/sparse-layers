@@ -7,14 +7,10 @@ from sparse_layers import ButterflyLinear, ButterflyMLP, SimpleMLP
 def test_initialization_creates_sparse_layers():
     model = ButterflyMLP(input_dim=8, hidden_dims=[8, 8], output_dim=8)
 
-    sparse_layers = [
-        module for module in model.modules() if isinstance(module, ButterflyLinear)
-    ]
+    sparse_layers = [module for module in model.modules() if isinstance(module, ButterflyLinear)]
 
     assert len(sparse_layers) == 3
-    assert all(
-        layer.in_features == layer.out_features == 8 for layer in sparse_layers
-    )
+    assert all(layer.in_features == layer.out_features == 8 for layer in sparse_layers)
 
 
 @pytest.mark.parametrize("batch_size", [1, 4])

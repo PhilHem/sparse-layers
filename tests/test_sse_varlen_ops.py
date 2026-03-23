@@ -100,10 +100,7 @@ def _naive_varlen(
             offset += count
             cu_seqlens.append(offset)
 
-    if packed_tokens:
-        packed = torch.stack(packed_tokens, dim=0)
-    else:
-        packed = x.new_zeros((0, d_model))
+    packed = torch.stack(packed_tokens, dim=0) if packed_tokens else x.new_zeros((0, d_model))
 
     cu_tensor = torch.tensor(
         cu_seqlens,
@@ -128,9 +125,7 @@ def test_varlen_ops_matches_naive_reordering():
     torch.manual_seed(0)
     module = _build_module(num_partitions=6, k=3, return_inverse=True)
     x = torch.randn(2, 5, module.config.d_model)
-    partition_indices = torch.randint(
-        0, module.num_partitions, (2, 5, module.k), dtype=torch.long
-    )
+    partition_indices = torch.randint(0, module.num_partitions, (2, 5, module.k), dtype=torch.long)
 
     expected_tokens, expected_cu, expected_inverse = _naive_varlen(
         x, partition_indices, module.num_partitions, return_inverse=True
@@ -145,9 +140,7 @@ def test_varlen_ops_matches_naive_reordering():
 def test_varlen_ops_returns_none_inverse_when_disabled():
     module = _build_module(return_inverse=False)
     x = torch.randn(1, 4, module.config.d_model)
-    partition_indices = torch.randint(
-        0, module.num_partitions, (1, 4, module.k), dtype=torch.long
-    )
+    partition_indices = torch.randint(0, module.num_partitions, (1, 4, module.k), dtype=torch.long)
 
     _, _, inverse = module(x, partition_indices)
 
@@ -158,9 +151,7 @@ def test_varlen_ops_computes_cu_seqlens():
     torch.manual_seed(1)
     module = _build_module(num_partitions=4, k=2, return_inverse=True)
     x = torch.randn(3, 6, module.config.d_model)
-    partition_indices = torch.randint(
-        0, module.num_partitions, (3, 6, module.k), dtype=torch.long
-    )
+    partition_indices = torch.randint(0, module.num_partitions, (3, 6, module.k), dtype=torch.long)
 
     packed, cu_seqlens, _ = module(x, partition_indices)
 
@@ -205,9 +196,7 @@ def test_varlen_ops_preserves_gradients():
     torch.manual_seed(2)
     module = _build_module(num_partitions=4, k=2, return_inverse=False)
     x = torch.randn(3, 5, module.config.d_model, requires_grad=True)
-    partition_indices = torch.randint(
-        0, module.num_partitions, (3, 5, module.k), dtype=torch.long
-    )
+    partition_indices = torch.randint(0, module.num_partitions, (3, 5, module.k), dtype=torch.long)
 
     packed, _, _ = module(x, partition_indices)
     loss = packed.sum()
@@ -220,9 +209,7 @@ def test_varlen_ops_preserves_gradients():
 def test_varlen_ops_validates_input_dimensions():
     module = _build_module()
     x = torch.randn(module.config.d_model)
-    partition_indices = torch.randint(
-        0, module.num_partitions, (module.k,), dtype=torch.long
-    )
+    partition_indices = torch.randint(0, module.num_partitions, (module.k,), dtype=torch.long)
 
     with pytest.raises(ValueError, match="expected input of shape"):
         module(x, partition_indices)
@@ -231,9 +218,7 @@ def test_varlen_ops_validates_input_dimensions():
 def test_varlen_ops_validates_partition_indices_dimensions():
     module = _build_module()
     x = torch.randn(2, 3, module.config.d_model)
-    partition_indices = torch.randint(
-        0, module.num_partitions, (2, module.k), dtype=torch.long
-    )
+    partition_indices = torch.randint(0, module.num_partitions, (2, module.k), dtype=torch.long)
 
     with pytest.raises(ValueError, match="expected partition_indices with shape"):
         module(x, partition_indices)
@@ -242,9 +227,7 @@ def test_varlen_ops_validates_partition_indices_dimensions():
 def test_varlen_ops_validates_feature_dimension():
     module = _build_module()
     x = torch.randn(2, 3, module.config.d_model + 1)
-    partition_indices = torch.randint(
-        0, module.num_partitions, (2, 3, module.k), dtype=torch.long
-    )
+    partition_indices = torch.randint(0, module.num_partitions, (2, 3, module.k), dtype=torch.long)
 
     with pytest.raises(ValueError, match="expected last dimension"):
         module(x, partition_indices)
@@ -277,4 +260,3 @@ def test_varlen_ops_validates_partition_range():
 
     with pytest.raises(ValueError, match="values outside valid partition range"):
         module(x, partition_indices)
-

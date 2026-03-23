@@ -5,8 +5,8 @@ import math
 import torch
 from torch import Tensor, nn
 
-from sparse_layers.ops.butterfly import _is_power_of_two
 from sparse_layers.modules.butterfly_linear import ButterflyLinear
+from sparse_layers.ops.butterfly import _is_power_of_two
 
 
 class ButterflyMultiHeadAttention(nn.Module):
@@ -44,9 +44,7 @@ class ButterflyMultiHeadAttention(nn.Module):
             raise ValueError("expected input of shape (batch, seq_len, d_model)")
         batch_size, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         query = self.query(x)
         key = self.key(x)

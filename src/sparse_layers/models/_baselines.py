@@ -177,9 +177,7 @@ class MultiHeadAttention(nn.Module):
             raise ValueError("expected input of shape (batch, seq_len, d_model)")
         batch_size, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         query = self.query(x)
         key = self.key(x)

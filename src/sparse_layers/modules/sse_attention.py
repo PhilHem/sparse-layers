@@ -1,19 +1,19 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
 import torch
+from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
 from torch import Tensor, nn
 
 from sparse_layers.modules.multi_partition_state import (
     SSEMultiPartitionState,
     SSEMultiPartitionStateConfig,
 )
+from sparse_layers.modules.padded_butterfly_linear import PaddedButterflyLinear
 from sparse_layers.modules.partition_selector import (
     SSEPartitionSelector,
     SSEPartitionSelectorConfig,
 )
 from sparse_layers.modules.sparse_softmax import SSESparseSoftmax, SSESparseSoftmaxConfig
-from sparse_layers.modules.padded_butterfly_linear import PaddedButterflyLinear
 from sparse_layers.ops.masking import SSEMaskingOps, SSEMaskingOpsConfig
 from sparse_layers.ops.varlen import SSEVarlenOps, SSEVarlenOpsConfig
 
@@ -44,9 +44,7 @@ class SSEAttentionConfig(BaseModel):
     def validate_k_within_partitions(cls, value: int, info: ValidationInfo) -> int:
         num_partitions = info.data.get("num_partitions")
         if num_partitions is not None and value > num_partitions:
-            raise ValueError(
-                f"k={value} must be <= num_partitions={num_partitions}"
-            )
+            raise ValueError(f"k={value} must be <= num_partitions={num_partitions}")
         return value
 
 
@@ -103,9 +101,7 @@ class NaiveSSEAttention(nn.Module):
 
         batch, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         if seq_len == 0:
             return torch.zeros(
@@ -194,9 +190,7 @@ class SSEAttention(nn.Module):
 
         batch, seq_len, feature_dim = x.shape
         if feature_dim != self.d_model:
-            raise ValueError(
-                f"expected last dimension {self.d_model}, received {feature_dim}"
-            )
+            raise ValueError(f"expected last dimension {self.d_model}, received {feature_dim}")
 
         if seq_len == 0:
             return torch.zeros(
@@ -249,9 +243,7 @@ class SSEAttentionAdaptiveConfig(BaseModel):
     num_partitions: int = Field(
         gt=1, description="Total number of partitions used for sparse execution"
     )
-    k: int = Field(
-        gt=0, description="Number of partitions selected per token during routing"
-    )
+    k: int = Field(gt=0, description="Number of partitions selected per token during routing")
     state_rows: int = Field(
         gt=0, description="Rows tracked per partition for compatibility with SSE ops"
     )
@@ -269,9 +261,7 @@ class SSEAttentionAdaptiveConfig(BaseModel):
     def validate_k_within_partitions(cls, value: int, info: ValidationInfo) -> int:
         num_partitions = info.data.get("num_partitions")
         if num_partitions is not None and value > num_partitions:
-            raise ValueError(
-                f"k={value} must be <= num_partitions={num_partitions}"
-            )
+            raise ValueError(f"k={value} must be <= num_partitions={num_partitions}")
         return value
 
 
@@ -314,9 +304,7 @@ class SSEAttentionAdaptive(nn.Module):
             )
 
         if partition_indices.dim() != 3:
-            raise ValueError(
-                "expected partition_indices with shape (batch, seq_len, k)"
-            )
+            raise ValueError("expected partition_indices with shape (batch, seq_len, k)")
 
         if partition_indices.shape[0] != batch or partition_indices.shape[1] != seq_len:
             raise ValueError(
@@ -324,9 +312,7 @@ class SSEAttentionAdaptive(nn.Module):
             )
 
         if partition_indices.shape[2] != self.config.k:
-            raise ValueError(
-                "expected partition_indices last dimension to equal configured k"
-            )
+            raise ValueError("expected partition_indices last dimension to equal configured k")
 
         if partition_indices.dtype != torch.long:
             raise ValueError("partition_indices must have dtype torch.long")
@@ -339,14 +325,15 @@ class SSEAttentionAdaptive(nn.Module):
     def extra_repr(self) -> str:
         return (
             f"d_model={self.config.d_model}, num_partitions={self.config.num_partitions}, "
-            f"k={self.config.k}, threshold={self.threshold}, return_inverse={self.config.return_inverse}"
+            f"k={self.config.k}, threshold={self.threshold}, "
+            f"return_inverse={self.config.return_inverse}"
         )
 
 
 __all__ = [
-    "SSEAttentionConfig",
     "NaiveSSEAttention",
     "SSEAttention",
-    "SSEAttentionAdaptiveConfig",
     "SSEAttentionAdaptive",
+    "SSEAttentionAdaptiveConfig",
+    "SSEAttentionConfig",
 ]

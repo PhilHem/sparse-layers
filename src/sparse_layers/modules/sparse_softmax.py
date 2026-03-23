@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import torch
-from torch import Tensor, nn
 import torch.nn.functional as F
-
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
+from torch import Tensor, nn
 
 
 class SSESparseSoftmaxConfig(BaseModel):
@@ -26,14 +25,10 @@ class SSESparseSoftmaxConfig(BaseModel):
 
     @field_validator("k")
     @classmethod
-    def validate_k_within_partitions(
-        cls, value: int, info: ValidationInfo
-    ) -> int:
+    def validate_k_within_partitions(cls, value: int, info: ValidationInfo) -> int:
         num_partitions = info.data.get("num_partitions")
         if num_partitions is not None and value > num_partitions:
-            raise ValueError(
-                f"k={value} must be <= num_partitions={num_partitions}"
-            )
+            raise ValueError(f"k={value} must be <= num_partitions={num_partitions}")
         return value
 
 
@@ -93,9 +88,7 @@ class SSESparseSoftmax(nn.Module):
             )
 
         if partition_indices.dtype != torch.long:
-            raise ValueError(
-                "partition_indices must have dtype torch.long for scatter operations"
-            )
+            raise ValueError("partition_indices must have dtype torch.long for scatter operations")
 
         if keys.shape[0] != partition_indices.shape[0]:
             raise ValueError(

@@ -81,4 +81,3 @@ def test_supports_biasless_configuration_and_extra_repr():
 
     assert layer.bias is None
     assert "bias=False" in layer.extra_repr()
-

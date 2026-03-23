@@ -6,9 +6,7 @@ from sparse_layers.modules import SSEMultiPartitionStateConfig
 
 
 def test_config_accepts_valid_values():
-    config = SSEMultiPartitionStateConfig(
-        num_partitions=4, c=128, d=768
-    )
+    config = SSEMultiPartitionStateConfig(num_partitions=4, c=128, d=768)
 
     assert config.num_partitions == 4
     assert config.c == 128
@@ -18,31 +16,23 @@ def test_config_accepts_valid_values():
 @pytest.mark.parametrize("num_partitions", [0, 1, -3])
 def test_config_requires_num_partitions_greater_than_one(num_partitions):
     with pytest.raises(ValidationError):
-        SSEMultiPartitionStateConfig(
-            num_partitions=num_partitions, c=128, d=768
-        )
+        SSEMultiPartitionStateConfig(num_partitions=num_partitions, c=128, d=768)
 
 
 @pytest.mark.parametrize("c", [0, -1, -16])
 def test_config_requires_positive_c(c):
     with pytest.raises(ValidationError):
-        SSEMultiPartitionStateConfig(
-            num_partitions=4, c=c, d=768
-        )
+        SSEMultiPartitionStateConfig(num_partitions=4, c=c, d=768)
 
 
 @pytest.mark.parametrize("d", [0, -1, -768])
 def test_config_requires_positive_d(d):
     with pytest.raises(ValidationError):
-        SSEMultiPartitionStateConfig(
-            num_partitions=4, c=128, d=d
-        )
+        SSEMultiPartitionStateConfig(num_partitions=4, c=128, d=d)
 
 
 def test_config_is_serializable():
-    config = SSEMultiPartitionStateConfig(
-        num_partitions=6, c=32, d=256
-    )
+    config = SSEMultiPartitionStateConfig(num_partitions=6, c=32, d=256)
 
     dumped = config.model_dump()
 
@@ -54,9 +44,7 @@ def test_config_is_serializable():
 
 
 def test_config_is_immutable():
-    config = SSEMultiPartitionStateConfig(
-        num_partitions=4, c=128, d=768
-    )
+    config = SSEMultiPartitionStateConfig(num_partitions=4, c=128, d=768)
 
     with pytest.raises(ValidationError):
         config.c = 64
@@ -328,8 +316,12 @@ def test_naive_read_matches_manual_computation():
     module = NaiveMultiPartitionState(config)
 
     # Set specific state values
-    module.states[0].data = torch.tensor([[1.0, 2.0, 3.0, 4.0], [5.0, 6.0, 7.0, 8.0], [9.0, 10.0, 11.0, 12.0]])
-    module.states[1].data = torch.tensor([[10.0, 20.0, 30.0, 40.0], [50.0, 60.0, 70.0, 80.0], [90.0, 100.0, 110.0, 120.0]])
+    module.states[0].data = torch.tensor(
+        [[1.0, 2.0, 3.0, 4.0], [5.0, 6.0, 7.0, 8.0], [9.0, 10.0, 11.0, 12.0]]
+    )
+    module.states[1].data = torch.tensor(
+        [[10.0, 20.0, 30.0, 40.0], [50.0, 60.0, 70.0, 80.0], [90.0, 100.0, 110.0, 120.0]]
+    )
 
     partition_indices = torch.tensor([[[0, 1]]], dtype=torch.long)
     queries = torch.tensor([[[1.0, 1.0, 1.0, 1.0]]])
@@ -468,18 +460,16 @@ def test_naive_update_incremental_matches_batch_computation():
 
     torch.manual_seed(12)
     config = _build_config(num_partitions=3, c=4, d=8)
-    
+
     # Incremental updates
     module_inc = NaiveMultiPartitionState(config)
     partition_indices = torch.tensor([[[0], [1], [2]]], dtype=torch.long)
     keys = torch.randn(1, 3, 1, config.c)
     values = torch.randn(1, 3, config.d)
-    
+
     for t in range(3):
         module_inc.update(
-            partition_indices[:, t:t+1, :],
-            keys[:, t:t+1, :, :],
-            values[:, t:t+1, :]
+            partition_indices[:, t : t + 1, :], keys[:, t : t + 1, :, :], values[:, t : t + 1, :]
         )
 
     # Batch update
@@ -521,7 +511,7 @@ def test_optimized_update_matches_naive_outputs():
 
     torch.manual_seed(13)
     config = _build_config(num_partitions=4, c=8, d=16)
-    
+
     naive = NaiveMultiPartitionState(config)
     optimized = SSEMultiPartitionState(config)
 
@@ -545,7 +535,7 @@ def test_optimized_read_matches_naive_outputs():
 
     torch.manual_seed(14)
     config = _build_config(num_partitions=3, c=6, d=12)
-    
+
     naive = NaiveMultiPartitionState(config)
     optimized = SSEMultiPartitionState(config)
 
@@ -621,7 +611,7 @@ def test_optimized_reset_state_matches_naive():
 
     torch.manual_seed(17)
     config = _build_config()
-    
+
     naive = NaiveMultiPartitionState(config)
     optimized = SSEMultiPartitionState(config)
 
@@ -755,4 +745,3 @@ def test_both_implementations_support_cuda():
     assert naive_output.is_cuda
     assert optimized_output.is_cuda
     assert torch.allclose(naive_output, optimized_output, atol=1e-6)
-

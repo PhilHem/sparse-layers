@@ -58,9 +58,7 @@ def test_adaptive_uses_masking_below_threshold():
     torch.manual_seed(0)
     module = _build_module(threshold=16)
     x = torch.randn(2, 6, module.config.d_model)
-    partition_indices = torch.randint(
-        0, module.config.num_partitions, (2, 6, module.config.k)
-    )
+    partition_indices = torch.randint(0, module.config.num_partitions, (2, 6, module.config.k))
 
     output = module(x, partition_indices)
 
@@ -87,9 +85,7 @@ def test_adaptive_uses_varlen_at_or_above_threshold(seq_len):
     assert isinstance(packed, torch.Tensor)
     assert isinstance(cu_seqlens, torch.Tensor)
     assert isinstance(inverse, torch.Tensor)
-    assert cu_seqlens.shape == (
-        module.config.num_partitions * x.size(0) + 1,
-    )
+    assert cu_seqlens.shape == (module.config.num_partitions * x.size(0) + 1,)
     assert cu_seqlens.dtype == torch.int32
     assert inverse.shape == (2, seq_len, module.config.k)
 
@@ -131,6 +127,3 @@ def test_adaptive_respects_return_inverse_flag():
     _, _, inverse = module(x, partition_indices)
 
     assert inverse is None
-
-
-

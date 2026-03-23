@@ -7,9 +7,7 @@ from sparse_layers import SimpleMLP
 def test_initialization_creates_expected_layers():
     model = SimpleMLP(input_dim=10, hidden_dims=[16, 8], output_dim=4)
 
-    linear_layers = [
-        module for module in model.modules() if isinstance(module, torch.nn.Linear)
-    ]
+    linear_layers = [module for module in model.modules() if isinstance(module, torch.nn.Linear)]
 
     # Expect three linear layers: input->16, 16->8, 8->4
     assert len(linear_layers) == 3

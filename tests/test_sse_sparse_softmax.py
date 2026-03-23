@@ -12,9 +12,7 @@ from sparse_layers.modules import (
 
 
 def test_config_accepts_valid_values():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=128, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=128, k=2)
 
     assert config.num_partitions == 4
     assert config.state_rows_per_partition == 128
@@ -24,9 +22,7 @@ def test_config_accepts_valid_values():
 @pytest.mark.parametrize("num_partitions", [0, 1, -3])
 def test_config_requires_num_partitions_greater_than_one(num_partitions):
     with pytest.raises(ValidationError):
-        SSESparseSoftmaxConfig(
-            num_partitions=num_partitions, state_rows_per_partition=64, k=2
-        )
+        SSESparseSoftmaxConfig(num_partitions=num_partitions, state_rows_per_partition=64, k=2)
 
 
 @pytest.mark.parametrize("state_rows_per_partition", [0, -1, -16])
@@ -51,15 +47,11 @@ def test_config_requires_positive_k(k):
 
 def test_config_requires_k_less_or_equal_num_partitions():
     with pytest.raises(ValidationError):
-        SSESparseSoftmaxConfig(
-            num_partitions=4, state_rows_per_partition=128, k=5
-        )
+        SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=128, k=5)
 
 
 def test_config_is_serializable():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=6, state_rows_per_partition=32, k=3
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=6, state_rows_per_partition=32, k=3)
 
     dumped = config.model_dump()
 
@@ -71,18 +63,14 @@ def test_config_is_serializable():
 
 
 def test_config_is_immutable():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=32, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=32, k=2)
 
     with pytest.raises(ValidationError):
         config.k = 1
 
 
 def test_module_initializes_with_config():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
 
     module = SSESparseSoftmax(config)
 
@@ -93,9 +81,7 @@ def test_module_initializes_with_config():
 
 
 def test_module_exposes_no_parameters_by_default():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
 
     module = SSESparseSoftmax(config)
 
@@ -105,9 +91,7 @@ def test_module_exposes_no_parameters_by_default():
 
 
 def test_module_repr_includes_key_attributes():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
 
     module = SSESparseSoftmax(config)
 
@@ -119,9 +103,7 @@ def test_module_repr_includes_key_attributes():
 
 
 def test_forward_requires_three_dimensional_keys():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 64)
@@ -132,9 +114,7 @@ def test_forward_requires_three_dimensional_keys():
 
 
 def test_forward_requires_three_dimensional_partition_indices():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 3, 32)
@@ -145,9 +125,7 @@ def test_forward_requires_three_dimensional_partition_indices():
 
 
 def test_forward_requires_matching_batch_dimension():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 3, 32)
@@ -158,9 +136,7 @@ def test_forward_requires_matching_batch_dimension():
 
 
 def test_forward_requires_matching_sequence_length():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 3, 32)
@@ -171,9 +147,7 @@ def test_forward_requires_matching_sequence_length():
 
 
 def test_forward_requires_partition_k_matches_config():
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 3, 32)
@@ -186,9 +160,7 @@ def test_forward_requires_partition_k_matches_config():
 def test_forward_returns_expected_shape():
     torch.manual_seed(0)
     batch, seq_len, d_model = 2, 5, 16
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(batch, seq_len, d_model)
@@ -203,9 +175,7 @@ def test_forward_returns_expected_shape():
 def test_forward_zeroes_out_non_selected_partitions():
     torch.manual_seed(1)
     batch, seq_len, d_model = 2, 4, 8
-    config = SSESparseSoftmaxConfig(
-        num_partitions=5, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=5, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(batch, seq_len, d_model)
@@ -217,17 +187,13 @@ def test_forward_zeroes_out_non_selected_partitions():
     mask = torch.isin(all_indices.view(1, 1, -1), partition_indices)
     non_selected = (~mask).unsqueeze(-1)
 
-    assert torch.allclose(
-        output * non_selected, torch.zeros_like(output), atol=0.0, rtol=0.0
-    )
+    assert torch.allclose(output * non_selected, torch.zeros_like(output), atol=0.0, rtol=0.0)
 
 
 def test_forward_is_deterministic_for_same_inputs():
     torch.manual_seed(2)
     batch, seq_len, d_model = 2, 3, 12
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(batch, seq_len, d_model)
@@ -242,9 +208,7 @@ def test_forward_is_deterministic_for_same_inputs():
 def test_forward_non_selected_partitions_remain_zero_across_calls():
     torch.manual_seed(14)
     batch, seq_len, d_model = 2, 3, 6
-    config = SSESparseSoftmaxConfig(
-        num_partitions=5, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=5, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(batch, seq_len, d_model)
@@ -256,16 +220,12 @@ def test_forward_non_selected_partitions_remain_zero_across_calls():
         mask = torch.isin(all_indices.view(1, 1, -1), partition_indices)
         non_selected = (~mask).unsqueeze(-1)
 
-        assert torch.allclose(
-            output * non_selected, torch.zeros_like(output), atol=0.0, rtol=0.0
-        )
+        assert torch.allclose(output * non_selected, torch.zeros_like(output), atol=0.0, rtol=0.0)
 
 
 def test_forward_handles_k_equals_one():
     torch.manual_seed(15)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=1
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=1)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 3, 5)
@@ -281,9 +241,7 @@ def test_forward_handles_k_equals_one():
 
 def test_forward_handles_k_equals_num_partitions():
     torch.manual_seed(16)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=3, state_rows_per_partition=64, k=3
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=3, state_rows_per_partition=64, k=3)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(1, 2, 4)
@@ -298,9 +256,7 @@ def test_forward_handles_k_equals_num_partitions():
 
 def test_forward_handles_single_batch_and_token():
     torch.manual_seed(17)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(1, 1, 6)
@@ -317,9 +273,7 @@ def test_forward_probabilities_sum_to_expected_value(k):
     torch.manual_seed(3)
     batch, seq_len, d_model = 2, 3, 10
     num_partitions = max(4, k)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=num_partitions, state_rows_per_partition=64, k=k
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=num_partitions, state_rows_per_partition=64, k=k)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(batch, seq_len, d_model)
@@ -336,9 +290,7 @@ def test_forward_probabilities_sum_to_expected_value(k):
 def test_forward_probabilities_have_no_nans():
     torch.manual_seed(4)
     batch, seq_len, d_model = 2, 3, 10
-    config = SSESparseSoftmaxConfig(
-        num_partitions=5, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=5, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(batch, seq_len, d_model)
@@ -350,7 +302,9 @@ def test_forward_probabilities_have_no_nans():
     assert torch.all(output >= 0)
 
 
-def _reference_sparse_softmax(keys: torch.Tensor, partition_indices: torch.Tensor, num_partitions: int) -> torch.Tensor:
+def _reference_sparse_softmax(
+    keys: torch.Tensor, partition_indices: torch.Tensor, num_partitions: int
+) -> torch.Tensor:
     expanded = keys.unsqueeze(2).expand(-1, -1, num_partitions, -1)
     partition_scale = torch.linspace(
         1.0,
@@ -372,9 +326,7 @@ def _reference_sparse_softmax(keys: torch.Tensor, partition_indices: torch.Tenso
 def test_scaling_factor_matches_reference_normalized_values():
     torch.manual_seed(5)
     batch, seq_len, d_model = 2, 3, 10
-    config = SSESparseSoftmaxConfig(
-        num_partitions=5, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=5, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(batch, seq_len, d_model)
@@ -403,10 +355,7 @@ def test_gradient_magnitudes_reduce_with_larger_k():
         module = SSESparseSoftmax(config)
 
         partition_indices = (
-            torch.arange(k, dtype=torch.long)
-            .unsqueeze(0)
-            .unsqueeze(0)
-            .repeat(batch, seq_len, 1)
+            torch.arange(k, dtype=torch.long).unsqueeze(0).unsqueeze(0).repeat(batch, seq_len, 1)
         )
 
         keys_scaled = base_keys.clone().detach().requires_grad_(True)
@@ -426,15 +375,13 @@ def test_gradient_magnitudes_reduce_with_larger_k():
         ratio = grad_scaled.abs().mean() / grad_reference.abs().mean()
         ratios.append(ratio.item())
 
-    for ratio, k in zip(ratios, k_values):
+    for ratio, k in zip(ratios, k_values, strict=False):
         assert ratio == pytest.approx(1.0 / k, rel=1e-2, abs=1e-3)
 
 
 def test_forward_remains_stable_for_large_values():
     torch.manual_seed(7)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=6, state_rows_per_partition=64, k=3
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=6, state_rows_per_partition=64, k=3)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 4, 8) * 1e2
@@ -448,9 +395,7 @@ def test_forward_remains_stable_for_large_values():
 
 def test_backward_produces_gradients_for_keys():
     torch.manual_seed(11)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=5, state_rows_per_partition=64, k=3
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=5, state_rows_per_partition=64, k=3)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 3, 4, requires_grad=True)
@@ -468,9 +413,7 @@ def test_backward_produces_gradients_for_keys():
 
 def test_backward_gradients_zero_for_unselected_partitions():
     torch.manual_seed(12)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=5, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=5, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(1, 2, 3, requires_grad=True)
@@ -485,9 +428,7 @@ def test_backward_gradients_zero_for_unselected_partitions():
 
 def test_autograd_gradcheck_passes():
     torch.manual_seed(13)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config).to(dtype=torch.float64)
 
     keys = torch.randn(1, 2, 3, dtype=torch.float64, requires_grad=True)
@@ -500,13 +441,9 @@ def test_autograd_gradcheck_passes():
 
 
 def test_forward_matches_manual_dense_computation():
-    keys = torch.tensor(
-        [[[0.1, 0.2], [0.3, -0.4]]], dtype=torch.float64
-    )
+    keys = torch.tensor([[[0.1, 0.2], [0.3, -0.4]]], dtype=torch.float64)
     partition_indices = torch.tensor([[[0, 2], [1, 2]]], dtype=torch.long)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=3, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=3, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config).to(dtype=torch.float64)
 
     output = module(keys, partition_indices)
@@ -548,9 +485,7 @@ def test_integration_with_partition_selector_pipeline():
 
 def test_forward_remains_stable_for_small_values():
     torch.manual_seed(8)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=5, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=5, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config)
 
     keys = torch.randn(2, 3, 6) * 1e-5
@@ -564,9 +499,7 @@ def test_forward_remains_stable_for_small_values():
 
 def test_forward_supports_float64_precision():
     torch.manual_seed(9)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config).to(dtype=torch.float64)
 
     keys = torch.randn(2, 3, 5, dtype=torch.float64)
@@ -581,9 +514,7 @@ def test_forward_supports_float64_precision():
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA not available")
 def test_forward_supports_cuda_execution():
     torch.manual_seed(10)
-    config = SSESparseSoftmaxConfig(
-        num_partitions=4, state_rows_per_partition=64, k=2
-    )
+    config = SSESparseSoftmaxConfig(num_partitions=4, state_rows_per_partition=64, k=2)
     module = SSESparseSoftmax(config).cuda()
 
     keys = torch.randn(2, 3, 6, device="cuda")
@@ -593,5 +524,3 @@ def test_forward_supports_cuda_execution():
 
     assert output.is_cuda
     assert torch.all(torch.isfinite(output))
-
-

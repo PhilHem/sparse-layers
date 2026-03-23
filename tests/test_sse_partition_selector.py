@@ -191,9 +191,7 @@ def test_partition_selection_distribution_is_well_spread():
     for _ in range(64):
         x = torch.randn(8, 10, config.d_model)
         selections = selector(x)
-        counts += torch.bincount(
-            selections.flatten(), minlength=config.num_partitions
-        )
+        counts += torch.bincount(selections.flatten(), minlength=config.num_partitions)
 
     assert torch.all(counts > 0)
     imbalance = counts.float() / counts.sum()
@@ -347,4 +345,3 @@ def test_bias_scores_reasonable_magnitude_for_softmax():
     assert 0.01 < mean_abs < 100, mean_abs
     assert max_abs < 1000, max_abs
     assert std > 0.01, std
-

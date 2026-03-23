@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from torch import Tensor, nn
 import torch.nn.functional as F
+from torch import Tensor, nn
 
-from sparse_layers.ops.butterfly import _is_power_of_two, _next_power_of_two
 from sparse_layers.modules.butterfly_linear import ButterflyLinear
+from sparse_layers.ops.butterfly import _next_power_of_two
 
 
 class PaddedButterflyLinear(nn.Module):
@@ -37,9 +37,7 @@ class PaddedButterflyLinear(nn.Module):
 
     def forward(self, input: Tensor) -> Tensor:
         if input.shape[-1] != self.in_features:
-            raise ValueError(
-                f"Expected last dimension {self.in_features}, got {input.shape[-1]}"
-            )
+            raise ValueError(f"Expected last dimension {self.in_features}, got {input.shape[-1]}")
 
         original_shape = input.shape[:-1]
         x = input.reshape(-1, self.in_features)

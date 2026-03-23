@@ -369,5 +369,3 @@ def test_forward_matches_known_reference_output():
     expected = torch.tensor([[[9.0, 18.0], [168.0, 238.0]]])
 
     assert torch.allclose(outputs, expected)
-
-

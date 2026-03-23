@@ -72,7 +72,9 @@ def test_matches_simple_mlp_when_weights_are_copied():
     custom_linear_layers = _extract_custom_linear_layers(custom)
 
     with torch.no_grad():
-        for custom_layer, simple_layer in zip(custom_linear_layers, simple_linear_layers):
+        for custom_layer, simple_layer in zip(
+            custom_linear_layers, simple_linear_layers, strict=False
+        ):
             custom_layer.weight.copy_(simple_layer.weight)
             if custom_layer.bias is not None and simple_layer.bias is not None:
                 custom_layer.bias.copy_(simple_layer.bias)
@@ -80,4 +82,3 @@ def test_matches_simple_mlp_when_weights_are_copied():
     x = torch.randn(4, 7)
 
     torch.testing.assert_close(custom(x), simple(x))
-
