@@ -73,11 +73,11 @@ def test_output_parity_with_baseline_via_from_linear() -> None:
     butterfly.eval()
 
     # Fit each butterfly projection from the corresponding baseline projection
-    with torch.no_grad():
-        butterfly.query = ButterflyLinear.from_linear(baseline.query, seed=0)
-        butterfly.key = ButterflyLinear.from_linear(baseline.key, seed=1)
-        butterfly.value = ButterflyLinear.from_linear(baseline.value, seed=2)
-        butterfly.out = ButterflyLinear.from_linear(baseline.out, seed=3)
+    # (from_linear uses gradient-based optimization internally — no torch.no_grad())
+    butterfly.query = ButterflyLinear.from_linear(baseline.query, seed=0)
+    butterfly.key = ButterflyLinear.from_linear(baseline.key, seed=1)
+    butterfly.value = ButterflyLinear.from_linear(baseline.value, seed=2)
+    butterfly.out = ButterflyLinear.from_linear(baseline.out, seed=3)
 
     x = torch.randn(4, 8, d_model)
 
@@ -101,11 +101,10 @@ def test_output_parity_with_mask() -> None:
     butterfly = ButterflyMultiHeadAttention(d_model=d_model, num_heads=num_heads, dropout=0.0)
     butterfly.eval()
 
-    with torch.no_grad():
-        butterfly.query = ButterflyLinear.from_linear(baseline.query, seed=0)
-        butterfly.key = ButterflyLinear.from_linear(baseline.key, seed=1)
-        butterfly.value = ButterflyLinear.from_linear(baseline.value, seed=2)
-        butterfly.out = ButterflyLinear.from_linear(baseline.out, seed=3)
+    butterfly.query = ButterflyLinear.from_linear(baseline.query, seed=0)
+    butterfly.key = ButterflyLinear.from_linear(baseline.key, seed=1)
+    butterfly.value = ButterflyLinear.from_linear(baseline.value, seed=2)
+    butterfly.out = ButterflyLinear.from_linear(baseline.out, seed=3)
 
     x = torch.randn(4, 8, d_model)
     mask = torch.zeros(4, 8, dtype=torch.bool)
