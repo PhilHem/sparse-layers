@@ -179,7 +179,7 @@ def test_masking_ops_requires_long_partition_indices():
     x = torch.randn(2, 3, module.config.d_model)
     partition_indices = torch.randn(2, 3, module.k)
 
-    with pytest.raises(ValueError, match="partition_indices must have dtype torch.long"):
+    with pytest.raises(ValueError, match=r"partition_indices must have dtype torch\.long"):
         module(x, partition_indices)
 
 
