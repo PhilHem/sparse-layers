@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.4 - 2026-03-24
+
+### Fixed
+
+- Pydantic requirement lowered to `>=2.0.0` — enables use on Python 3.8 where pydantic 2.12+ is unavailable
+
 ## v0.2.3 - 2026-03-24
 
 ### Fixed

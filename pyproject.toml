@@ -1,6 +1,6 @@
 [project]
 name = "sparse-layers"
-version = "0.2.3"
+version = "0.2.4"
 requires-python = ">= 3.8"
 description = "Structured sparse layers for building memory-efficient neural networks"
 license = "MIT"
@@ -20,7 +20,7 @@ classifiers = [
 ]
 dependencies = [
     "torch>=2.0.0",
-    "pydantic>=2.12.4,<3",
+    "pydantic>=2.0.0,<3",
 ]
 
 [project.urls]
