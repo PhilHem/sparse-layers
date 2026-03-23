@@ -1,0 +1,36 @@
+"""Verify butterfly-layers has no infrastructure dependencies."""
+
+import subprocess
+import sys
+from pathlib import Path
+
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent / "src" / "butterfly_layers"
+
+FORBIDDEN = [
+    "from ma_butterfly",
+    "import ma_butterfly",
+    "import mlflow",
+    "from mlflow",
+    "import typer",
+    "from typer",
+    "import rich",
+    "from rich",
+    "import pylatex",
+    "from pylatex",
+    "import matplotlib",
+    "from matplotlib",
+]
+
+
+def test_no_forbidden_imports():
+    """butterfly-layers must only depend on torch and pydantic."""
+    violations = []
+    for py_file in PACKAGE_ROOT.rglob("*.py"):
+        content = py_file.read_text()
+        for pattern in FORBIDDEN:
+            for i, line in enumerate(content.splitlines(), 1):
+                stripped = line.strip()
+                if stripped.startswith(pattern):
+                    violations.append(f"{py_file.relative_to(PACKAGE_ROOT)}:{i}: {stripped}")
+
+    assert not violations, "Forbidden imports found in butterfly-layers:\n" + "\n".join(violations)

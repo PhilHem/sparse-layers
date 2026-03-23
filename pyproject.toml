@@ -1,0 +1,46 @@
+[project]
+name = "butterfly-layers"
+version = "0.1.0"
+requires-python = ">= 3.11"
+description = "Butterfly-factorized neural network layers for memory-efficient deep learning"
+license = "MIT"
+authors = [
+    { name = "Philipp Hematty", email = "34508934+PhilHem@users.noreply.github.com" },
+]
+readme = "README.md"
+keywords = ["butterfly", "neural-network", "sparse", "pytorch", "attention", "sse"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.7.1,<3",
+    "pydantic>=2.12.4,<3",
+]
+
+[project.urls]
+Homepage = "https://github.com/PhilHem/butterfly-layers"
+Repository = "https://github.com/PhilHem/butterfly-layers"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-xdist>=3.8.0,<4", "pytest-cov>=7.0.0,<8"]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/butterfly_layers"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["src/butterfly_layers"]
+omit = ["*/tests/*"]
