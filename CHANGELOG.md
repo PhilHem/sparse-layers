@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.2.2 - 2026-03-24
+
+### Fixed
+
+- Torch requirement lowered to `>=2.0.0` — enables use with Graphcore PopTorch 3.3 and other constrained environments
+- Output parity tests for `ButterflyMultiHeadAttention` now use `to_linear` roundtrip instead of `from_linear` fitting (which can't converge for arbitrary dense matrices)
+- All pyrefly type errors resolved — `int()` wrapping for tensor `.item()` calls, typed casts for `nn.ModuleList` iteration
+- `from_linear` docstring documents the convergence limitation
+
+### Added
+
+- Pre-commit hooks: ruff (lint + format) and pyrefly (type checking)
+- GitHub Actions CI: test (Python 3.11 + 3.12), lint, typecheck — all blocking
+- `py.typed` marker (PEP 561) for downstream type checking
+
 ## v0.2.1 - 2026-03-23
 
 ### Changed
