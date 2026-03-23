@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.3 - 2026-03-24
+
+### Fixed
+
+- Python requirement lowered to `>=3.8` — enables use on Graphcore IPU nodes (Ubuntu 20.04, Python 3.8)
+
 ## v0.2.2 - 2026-03-24
 
 ### Fixed
