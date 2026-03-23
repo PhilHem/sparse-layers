@@ -3,7 +3,7 @@ from __future__ import annotations
 from torch import Tensor, nn
 import torch.nn.functional as F
 
-from butterfly_layers.layers.butterfly_linear import ButterflyLinear, _is_power_of_two
+from sparse_layers.layers.butterfly_linear import ButterflyLinear, _is_power_of_two
 
 
 def _next_power_of_two(value: int) -> int:

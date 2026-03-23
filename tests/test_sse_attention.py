@@ -2,12 +2,12 @@ import pytest
 import torch
 from pydantic import ValidationError
 
-from butterfly_layers.sse import (
+from sparse_layers.sse import (
     NaiveSSEAttention,
     SSEAttention,
     SSEAttentionConfig,
 )
-from butterfly_layers import PaddedButterflyLinear
+from sparse_layers import PaddedButterflyLinear
 
 
 def _count_trainable_parameters(module: torch.nn.Module) -> int:

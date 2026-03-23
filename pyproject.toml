@@ -1,8 +1,8 @@
 [project]
-name = "butterfly-layers"
+name = "sparse-layers"
 version = "0.1.0"
 requires-python = ">= 3.11"
-description = "Butterfly-factorized neural network layers for memory-efficient deep learning"
+description = "Structured sparse layers for building memory-efficient neural networks"
 license = "MIT"
 authors = [
     { name = "Philipp Hematty", email = "34508934+PhilHem@users.noreply.github.com" },
@@ -24,8 +24,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/PhilHem/butterfly-layers"
-Repository = "https://github.com/PhilHem/butterfly-layers"
+Homepage = "https://github.com/PhilHem/sparse-layers"
+Repository = "https://github.com/PhilHem/sparse-layers"
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-xdist>=3.8.0,<4", "pytest-cov>=7.0.0,<8"]
@@ -35,12 +35,12 @@ build-backend = "hatchling.build"
 requires = ["hatchling"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/butterfly_layers"]
+packages = ["src/sparse_layers"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --tb=short"
 
 [tool.coverage.run]
-source = ["src/butterfly_layers"]
+source = ["src/sparse_layers"]
 omit = ["*/tests/*"]

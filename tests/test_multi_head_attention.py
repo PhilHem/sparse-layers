@@ -3,7 +3,7 @@ import torch
 
 
 def _build_module(**kwargs):
-    from butterfly_layers import MultiHeadAttention
+    from sparse_layers import MultiHeadAttention
 
     return MultiHeadAttention(**kwargs)
 

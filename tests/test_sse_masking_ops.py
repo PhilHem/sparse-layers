@@ -2,7 +2,7 @@ import pytest
 import torch
 from pydantic import ValidationError
 
-from butterfly_layers.sse import SSEMaskingOps, SSEMaskingOpsConfig
+from sparse_layers.sse import SSEMaskingOps, SSEMaskingOpsConfig
 
 
 def test_masking_config_accepts_valid_values():

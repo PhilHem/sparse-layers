@@ -1,18 +1,18 @@
-# butterfly-layers
+# sparse-layers
 
-Butterfly-factorized neural network layers for memory-efficient deep learning on PyTorch.
+Structured sparse layers for building memory-efficient neural networks on PyTorch. Drop-in replacements for standard layers using butterfly factorization, SSE attention, and other sparse primitives.
 
 ## Install
 
 ```bash
-pip install butterfly-layers
+pip install sparse-layers
 ```
 
 ## Usage
 
 ```python
 import torch
-from butterfly_layers import ButterflyLinear, ButterflyMLP
+from sparse_layers import ButterflyLinear, ButterflyMLP
 
 # Drop-in replacement for nn.Linear with O(n log n) parameters
 layer = ButterflyLinear(in_features=256, out_features=256)
@@ -27,7 +27,7 @@ y = mlp(x)
 ### Attention
 
 ```python
-from butterfly_layers import ButterflyMultiHeadAttention, MultiHeadAttention
+from sparse_layers import ButterflyMultiHeadAttention, MultiHeadAttention
 
 # Standard multi-head attention
 attn = MultiHeadAttention(d_model=256, num_heads=8)
@@ -44,7 +44,7 @@ out = bf_attn(seq, seq, seq)
 State Space Exploration modules for efficient sequence modeling with sparse attention patterns.
 
 ```python
-from butterfly_layers.sse import SSEAttention, SSEAttentionConfig
+from sparse_layers.sse import SSEAttention, SSEAttentionConfig
 
 config = SSEAttentionConfig(d_model=256, num_partitions=4)
 sse = SSEAttention(config)
@@ -55,7 +55,7 @@ out = sse(x)
 
 ## Modules
 
-### Layers (`butterfly_layers.layers`)
+### Layers (`sparse_layers.layers`)
 
 | Module | Description |
 |--------|-------------|
@@ -68,7 +68,7 @@ out = sse(x)
 | `CustomMLP` | MLP with CustomLinear layers |
 | `SimpleMLP` | Minimal MLP baseline |
 
-### SSE (`butterfly_layers.sse`)
+### SSE (`sparse_layers.sse`)
 
 | Module | Description |
 |--------|-------------|

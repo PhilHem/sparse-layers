@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from butterfly_layers import CustomLinear, CustomMLP, SimpleMLP
+from sparse_layers import CustomLinear, CustomMLP, SimpleMLP
 
 
 def _extract_custom_linear_layers(model: CustomMLP) -> list[CustomLinear]:

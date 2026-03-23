@@ -3,7 +3,7 @@ import math
 import pytest
 import torch
 
-from butterfly_layers import CustomLinear
+from sparse_layers import CustomLinear
 
 
 def test_initialization_sets_expected_shapes():

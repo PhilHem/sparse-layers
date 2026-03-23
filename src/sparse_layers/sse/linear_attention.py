@@ -3,7 +3,7 @@ from __future__ import annotations
 import torch
 from torch import Tensor, nn
 
-from butterfly_layers.sse.linear_attention_config import LinearAttentionConfig
+from sparse_layers.sse.linear_attention_config import LinearAttentionConfig
 
 
 class LinearAttention(nn.Module):

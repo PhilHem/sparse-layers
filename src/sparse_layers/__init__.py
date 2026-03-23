@@ -1,6 +1,6 @@
-"""butterfly-layers: reusable PyTorch layers with butterfly factorization and SSE attention."""
+"""sparse-layers: structured sparse layers for building memory-efficient neural networks."""
 
-from butterfly_layers.layers import (
+from sparse_layers.layers import (
     ButterflyLinear,
     ButterflyMLP,
     ButterflyMultiHeadAttention,
@@ -10,7 +10,7 @@ from butterfly_layers.layers import (
     PaddedButterflyLinear,
     SimpleMLP,
 )
-from butterfly_layers.sse import (
+from sparse_layers.sse import (
     LinearAttention,
     LinearAttentionConfig,
     NaiveMultiPartitionState,

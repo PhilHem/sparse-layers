@@ -5,8 +5,8 @@ from collections.abc import Sequence
 import torch
 from torch import nn
 
-from butterfly_layers.layers.butterfly_linear import ButterflyLinear, _is_power_of_two
-from butterfly_layers.layers.simple_mlp import SimpleMLP
+from sparse_layers.layers.butterfly_linear import ButterflyLinear, _is_power_of_two
+from sparse_layers.layers.simple_mlp import SimpleMLP
 
 
 class ButterflyMLP(nn.Module):
@@ -75,13 +75,13 @@ class ButterflyMLP(nn.Module):
 
         simple = SimpleMLP(self.input_dim, self.hidden_dims, self.output_dim)
 
-        butterfly_layers = [module for module in self.network if isinstance(module, ButterflyLinear)]
+        sparse_layers = [module for module in self.network if isinstance(module, ButterflyLinear)]
         dense_layers = [module for module in simple.modules() if isinstance(module, nn.Linear)]
 
-        if len(butterfly_layers) != len(dense_layers):
+        if len(sparse_layers) != len(dense_layers):
             raise RuntimeError("Unexpected layer mismatch during conversion to SimpleMLP")
 
-        for butterfly_layer, dense_layer in zip(butterfly_layers, dense_layers):
+        for butterfly_layer, dense_layer in zip(sparse_layers, dense_layers):
             converted = butterfly_layer.to_linear()
             with torch.no_grad():
                 dense_layer.weight.copy_(converted.weight)

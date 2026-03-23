@@ -5,7 +5,7 @@ from collections.abc import Sequence
 import torch
 from torch import nn
 
-from butterfly_layers.layers.custom_linear import CustomLinear
+from sparse_layers.layers.custom_linear import CustomLinear
 
 
 class CustomMLP(nn.Module):

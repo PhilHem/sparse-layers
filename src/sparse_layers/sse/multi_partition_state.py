@@ -3,7 +3,7 @@ from __future__ import annotations
 import torch
 from torch import Tensor, nn
 
-from butterfly_layers.sse.multi_partition_state_config import SSEMultiPartitionStateConfig
+from sparse_layers.sse.multi_partition_state_config import SSEMultiPartitionStateConfig
 
 
 class NaiveMultiPartitionState(nn.Module):

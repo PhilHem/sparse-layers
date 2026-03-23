@@ -5,7 +5,7 @@ import math
 import torch
 from torch import Tensor, nn
 
-from butterfly_layers.layers.butterfly_linear import ButterflyLinear
+from sparse_layers.layers.butterfly_linear import ButterflyLinear
 
 
 class ButterflyMultiHeadAttention(nn.Module):

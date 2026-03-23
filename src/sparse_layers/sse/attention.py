@@ -4,15 +4,15 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validat
 import torch
 from torch import Tensor, nn
 
-from butterfly_layers.sse.multi_partition_state import SSEMultiPartitionState
-from butterfly_layers.sse.multi_partition_state_config import (
+from sparse_layers.sse.multi_partition_state import SSEMultiPartitionState
+from sparse_layers.sse.multi_partition_state_config import (
     SSEMultiPartitionStateConfig,
 )
-from butterfly_layers.sse.partition_selector import SSEPartitionSelector
-from butterfly_layers.sse.partition_selector_config import SSEPartitionSelectorConfig
-from butterfly_layers.sse.sparse_softmax import SSESparseSoftmax
-from butterfly_layers.sse.sparse_softmax_config import SSESparseSoftmaxConfig
-from butterfly_layers.layers.padded_butterfly_linear import PaddedButterflyLinear
+from sparse_layers.sse.partition_selector import SSEPartitionSelector
+from sparse_layers.sse.partition_selector_config import SSEPartitionSelectorConfig
+from sparse_layers.sse.sparse_softmax import SSESparseSoftmax
+from sparse_layers.sse.sparse_softmax_config import SSESparseSoftmaxConfig
+from sparse_layers.layers.padded_butterfly_linear import PaddedButterflyLinear
 
 
 class SSEAttentionConfig(BaseModel):

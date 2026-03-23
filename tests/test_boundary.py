@@ -1,10 +1,10 @@
-"""Verify butterfly-layers has no infrastructure dependencies."""
+"""Verify sparse-layers has no infrastructure dependencies."""
 
 import subprocess
 import sys
 from pathlib import Path
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent / "src" / "butterfly_layers"
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent / "src" / "sparse_layers"
 
 FORBIDDEN = [
     "from ma_butterfly",
@@ -23,7 +23,7 @@ FORBIDDEN = [
 
 
 def test_no_forbidden_imports():
-    """butterfly-layers must only depend on torch and pydantic."""
+    """sparse-layers must only depend on torch and pydantic."""
     violations = []
     for py_file in PACKAGE_ROOT.rglob("*.py"):
         content = py_file.read_text()
@@ -33,4 +33,4 @@ def test_no_forbidden_imports():
                 if stripped.startswith(pattern):
                     violations.append(f"{py_file.relative_to(PACKAGE_ROOT)}:{i}: {stripped}")
 
-    assert not violations, "Forbidden imports found in butterfly-layers:\n" + "\n".join(violations)
+    assert not violations, "Forbidden imports found in sparse-layers:\n" + "\n".join(violations)

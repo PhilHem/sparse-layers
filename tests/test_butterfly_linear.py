@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from butterfly_layers import ButterflyLinear
+from sparse_layers import ButterflyLinear
 
 
 def test_initialization_sets_in_out_features():

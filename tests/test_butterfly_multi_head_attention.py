@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from butterfly_layers import ButterflyLinear, ButterflyMultiHeadAttention, MultiHeadAttention
+from sparse_layers import ButterflyLinear, ButterflyMultiHeadAttention, MultiHeadAttention
 
 
 def test_forward_preserves_shape() -> None:

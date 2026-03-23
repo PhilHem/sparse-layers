@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from butterfly_layers import PaddedButterflyLinear
+from sparse_layers import PaddedButterflyLinear
 
 
 @pytest.mark.parametrize(

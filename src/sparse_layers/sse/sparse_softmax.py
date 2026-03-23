@@ -4,7 +4,7 @@ import torch
 from torch import Tensor, nn
 import torch.nn.functional as F
 
-from butterfly_layers.sse.sparse_softmax_config import SSESparseSoftmaxConfig
+from sparse_layers.sse.sparse_softmax_config import SSESparseSoftmaxConfig
 
 
 class SSESparseSoftmax(nn.Module):

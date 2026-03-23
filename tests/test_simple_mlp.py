@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from butterfly_layers import SimpleMLP
+from sparse_layers import SimpleMLP
 
 
 def test_initialization_creates_expected_layers():

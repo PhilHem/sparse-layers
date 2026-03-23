@@ -3,7 +3,7 @@ import torch
 import torch.nn.functional as F
 from pydantic import ValidationError
 
-from butterfly_layers.sse import (
+from sparse_layers.sse import (
     SSEPartitionSelector,
     SSEPartitionSelectorConfig,
     SSESparseSoftmax,

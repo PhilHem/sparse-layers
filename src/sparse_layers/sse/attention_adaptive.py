@@ -4,8 +4,8 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validat
 import torch
 from torch import Tensor, nn
 
-from butterfly_layers.sse.masking_ops import SSEMaskingOps, SSEMaskingOpsConfig
-from butterfly_layers.sse.varlen_ops import SSEVarlenOps, SSEVarlenOpsConfig
+from sparse_layers.sse.masking_ops import SSEMaskingOps, SSEMaskingOpsConfig
+from sparse_layers.sse.varlen_ops import SSEVarlenOps, SSEVarlenOpsConfig
 
 
 class SSEAttentionAdaptiveConfig(BaseModel):

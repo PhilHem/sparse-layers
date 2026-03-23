@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from torch import Tensor, nn
 
-from butterfly_layers.sse.partition_selector_config import SSEPartitionSelectorConfig
+from sparse_layers.sse.partition_selector_config import SSEPartitionSelectorConfig
 
 
 class SSEPartitionSelector(nn.Module):
