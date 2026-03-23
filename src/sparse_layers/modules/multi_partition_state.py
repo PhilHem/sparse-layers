@@ -50,7 +50,7 @@ class NaiveMultiPartitionState(nn.Module):
         for b in range(partition_indices.size(0)):
             for t in range(partition_indices.size(1)):
                 for i in range(partition_indices.size(2)):
-                    partition_idx = partition_indices[b, t, i].item()
+                    partition_idx = int(partition_indices[b, t, i].item())
                     k_t = keys[b, t, i]  # (c,)
                     v_t = values[b, t]  # (d,)
                     # Update: S_t = S_{t-1} + k^T v
@@ -124,7 +124,7 @@ class NaiveMultiPartitionState(nn.Module):
             for t in range(seq_len):
                 output_t = torch.zeros(queries.size(-1), dtype=queries.dtype, device=queries.device)
                 for i in range(partition_indices.size(2)):
-                    partition_idx = partition_indices[b, t, i].item()
+                    partition_idx = int(partition_indices[b, t, i].item())
                     q_t = queries[b, t]  # (d,)
                     state = self.states[partition_idx]  # (c, d)
                     if self._forward_deltas:
@@ -213,7 +213,7 @@ class SSEMultiPartitionState(nn.Module):
         # We need to update: states[partition_idx] += outer(key, value)
         for idx in range(batch * seq_len):
             for i in range(k):
-                partition_idx = flat_indices[idx, i].item()
+                partition_idx = int(flat_indices[idx, i].item())
                 k_t = flat_keys[idx, i]  # (c,)
                 v_t = flat_values[idx]  # (d,)
                 # Update: states[partition_idx] += outer(k_t, v_t)

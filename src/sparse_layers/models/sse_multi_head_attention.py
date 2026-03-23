@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Final
+from typing import Final, cast
 
 import torch
 from pydantic import (
@@ -109,7 +109,7 @@ class NaiveSSEMultiHeadAttention(nn.Module):
 
     def reset_state(self) -> None:
         for head in self.heads:
-            head.reset_state()
+            cast(SSEAttention, head).reset_state()
 
 
 class _MultiHeadStateAdapter:
@@ -120,11 +120,14 @@ class _MultiHeadStateAdapter:
 
     @property
     def states(self) -> Tensor:
-        return torch.stack([head.state_mgr.states for head in self._heads], dim=0)
+        return torch.stack(
+            [cast(SSEAttention, head).state_mgr.states for head in self._heads],
+            dim=0,
+        )
 
     def reset_state(self) -> None:
         for head in self._heads:
-            head.reset_state()
+            cast(SSEAttention, head).reset_state()
 
 
 class SSEMultiHeadAttention(nn.Module):
@@ -135,9 +138,15 @@ class SSEMultiHeadAttention(nn.Module):
         self.config = config
         self._naive = NaiveSSEMultiHeadAttention(config)
         self.state_mgr = _MultiHeadStateAdapter(self._naive.heads)
-        self._query_modules = nn.ModuleList([head.query for head in self._naive.heads])
-        self._key_modules = nn.ModuleList([head.key for head in self._naive.heads])
-        self._value_modules = nn.ModuleList([head.value for head in self._naive.heads])
+        self._query_modules = nn.ModuleList(
+            [cast(SSEAttention, head).query for head in self._naive.heads]
+        )
+        self._key_modules = nn.ModuleList(
+            [cast(SSEAttention, head).key for head in self._naive.heads]
+        )
+        self._value_modules = nn.ModuleList(
+            [cast(SSEAttention, head).value for head in self._naive.heads]
+        )
 
     @property
     def d_model(self) -> int:
