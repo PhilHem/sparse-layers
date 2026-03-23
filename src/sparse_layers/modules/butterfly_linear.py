@@ -67,6 +67,15 @@ class ButterflyLinear(nn.Module):
         The method uses gradient-based fitting over the canonical basis to match
         the transformation represented by ``layer``. The bias term is copied
         directly before optimisation to accelerate convergence.
+
+        .. note::
+            Butterfly factorization is a structured constraint — not every
+            dense matrix can be represented exactly. This method works well
+            for roundtripping matrices that originated from a butterfly layer
+            (via :meth:`to_linear`), but will **not converge** for arbitrary
+            dense matrices. For general use, prefer training with
+            :class:`ButterflyLinear` directly rather than converting from
+            a pretrained dense layer.
         """
 
         if layer.in_features != layer.out_features:
