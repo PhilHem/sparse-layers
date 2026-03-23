@@ -51,4 +51,3 @@ jobs:
 
       - name: Pyrefly
         run: pip install pyrefly && pyrefly check src/
-        continue-on-error: true
