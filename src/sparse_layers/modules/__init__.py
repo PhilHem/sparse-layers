@@ -1,7 +1,6 @@
 """Composable building blocks: ButterflyLinear, SSEAttention, etc."""
 
 from sparse_layers.modules.butterfly_linear import ButterflyLinear
-from sparse_layers.modules.custom_linear import CustomLinear
 from sparse_layers.modules.linear_attention import LinearAttention, LinearAttentionConfig
 from sparse_layers.modules.multi_partition_state import (
     NaiveMultiPartitionState,
@@ -27,7 +26,6 @@ from sparse_layers.modules.sse_attention import (
 
 __all__ = [
     "ButterflyLinear",
-    "CustomLinear",
     "LinearAttention",
     "LinearAttentionConfig",
     "NaiveMultiPartitionState",
