@@ -57,4 +57,3 @@ class SimpleMLP(nn.Module):
             raise ValueError("SimpleMLP expects a 2D input tensor of shape (batch, features)")
 
         return self.network(x)
-

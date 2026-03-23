@@ -2,7 +2,7 @@ import pytest
 import torch
 from pydantic import ValidationError
 
-from sparse_layers.sse import SSEVarlenOps, SSEVarlenOpsConfig
+from sparse_layers.ops import SSEVarlenOps, SSEVarlenOpsConfig
 
 
 def _build_config(**overrides) -> SSEVarlenOpsConfig:

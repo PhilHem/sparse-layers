@@ -78,4 +78,3 @@ class MultiHeadAttention(nn.Module):
         batch_size, _, seq_len, _ = tensor.shape
         transposed = tensor.permute(0, 2, 1, 3)
         return transposed.reshape(batch_size, seq_len, self.d_model)
-

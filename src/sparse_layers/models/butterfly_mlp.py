@@ -5,8 +5,9 @@ from collections.abc import Sequence
 import torch
 from torch import nn
 
-from sparse_layers.layers.butterfly_linear import ButterflyLinear, _is_power_of_two
-from sparse_layers.layers.simple_mlp import SimpleMLP
+from sparse_layers.ops.butterfly import _is_power_of_two
+from sparse_layers.modules.butterfly_linear import ButterflyLinear
+from sparse_layers.models.simple_mlp import SimpleMLP
 
 
 class ButterflyMLP(nn.Module):

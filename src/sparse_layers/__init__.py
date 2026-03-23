@@ -1,69 +1,72 @@
 """sparse-layers: structured sparse layers for building memory-efficient neural networks."""
 
-from sparse_layers.layers import (
-    ButterflyLinear,
+from sparse_layers.models import (
     ButterflyMLP,
     ButterflyMultiHeadAttention,
-    CustomLinear,
     CustomMLP,
     MultiHeadAttention,
-    PaddedButterflyLinear,
+    NaiveSSEMultiHeadAttention,
+    SSEMultiHeadAttention,
+    SSEMultiHeadAttentionConfig,
     SimpleMLP,
 )
-from sparse_layers.sse import (
+from sparse_layers.modules import (
+    ButterflyLinear,
+    CustomLinear,
     LinearAttention,
     LinearAttentionConfig,
     NaiveMultiPartitionState,
     NaiveSSEAttention,
-    NaiveSSEMultiHeadAttention,
+    PaddedButterflyLinear,
     SSEAttention,
     SSEAttentionAdaptive,
     SSEAttentionAdaptiveConfig,
     SSEAttentionConfig,
-    SSEMaskingOps,
-    SSEMaskingOpsConfig,
-    SSEMultiHeadAttention,
-    SSEMultiHeadAttentionConfig,
     SSEMultiPartitionState,
     SSEMultiPartitionStateConfig,
     SSEPartitionSelector,
     SSEPartitionSelectorConfig,
     SSESparseSoftmax,
     SSESparseSoftmaxConfig,
+)
+from sparse_layers.ops import (
+    SSEMaskingOps,
+    SSEMaskingOpsConfig,
     SSEVarlenOps,
     SSEVarlenOpsConfig,
 )
 
 __all__ = [
-    # Layers
+    # Modules
     "ButterflyLinear",
-    "ButterflyMLP",
-    "ButterflyMultiHeadAttention",
     "CustomLinear",
-    "CustomMLP",
-    "MultiHeadAttention",
-    "PaddedButterflyLinear",
-    "SimpleMLP",
-    # SSE
     "LinearAttention",
     "LinearAttentionConfig",
     "NaiveMultiPartitionState",
     "NaiveSSEAttention",
-    "NaiveSSEMultiHeadAttention",
+    "PaddedButterflyLinear",
     "SSEAttention",
     "SSEAttentionAdaptive",
     "SSEAttentionAdaptiveConfig",
     "SSEAttentionConfig",
-    "SSEMaskingOps",
-    "SSEMaskingOpsConfig",
-    "SSEMultiHeadAttention",
-    "SSEMultiHeadAttentionConfig",
     "SSEMultiPartitionState",
     "SSEMultiPartitionStateConfig",
     "SSEPartitionSelector",
     "SSEPartitionSelectorConfig",
     "SSESparseSoftmax",
     "SSESparseSoftmaxConfig",
+    # Ops
+    "SSEMaskingOps",
+    "SSEMaskingOpsConfig",
     "SSEVarlenOps",
     "SSEVarlenOpsConfig",
+    # Models
+    "ButterflyMLP",
+    "ButterflyMultiHeadAttention",
+    "CustomMLP",
+    "MultiHeadAttention",
+    "NaiveSSEMultiHeadAttention",
+    "SSEMultiHeadAttention",
+    "SSEMultiHeadAttentionConfig",
+    "SimpleMLP",
 ]

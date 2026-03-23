@@ -5,7 +5,7 @@ from collections.abc import Sequence
 import torch
 from torch import nn
 
-from sparse_layers.layers.custom_linear import CustomLinear
+from sparse_layers.modules.custom_linear import CustomLinear
 
 
 class CustomMLP(nn.Module):
@@ -51,4 +51,3 @@ class CustomMLP(nn.Module):
             raise ValueError("CustomMLP expects a 2D input tensor of shape (batch, features)")
 
         return self.network(x)
-

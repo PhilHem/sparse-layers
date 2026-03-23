@@ -6,9 +6,7 @@ import torch
 from torch import Tensor, nn
 import torch.nn.functional as F
 
-
-def _is_power_of_two(value: int) -> bool:
-    return value > 0 and (value & (value - 1) == 0)
+from sparse_layers.ops.butterfly import _is_power_of_two
 
 
 class ButterflyLinear(nn.Module):

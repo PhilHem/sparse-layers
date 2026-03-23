@@ -2,7 +2,7 @@ import pytest
 import torch
 from pydantic import ValidationError
 
-from sparse_layers.sse import SSEMultiPartitionStateConfig
+from sparse_layers.modules import SSEMultiPartitionStateConfig
 
 
 def test_config_accepts_valid_values():
@@ -69,7 +69,7 @@ def _build_config(**overrides):
 
 
 def test_naive_module_initializes_with_config():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config()
     module = NaiveMultiPartitionState(config)
@@ -81,7 +81,7 @@ def test_naive_module_initializes_with_config():
 
 
 def test_naive_states_have_correct_shape():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config(num_partitions=4, c=128, d=768)
     module = NaiveMultiPartitionState(config)
@@ -92,7 +92,7 @@ def test_naive_states_have_correct_shape():
 
 
 def test_naive_states_are_not_trainable():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config()
     module = NaiveMultiPartitionState(config)
@@ -102,7 +102,7 @@ def test_naive_states_are_not_trainable():
 
 
 def test_naive_update_requires_correct_partition_indices_shape():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config()
     module = NaiveMultiPartitionState(config)
@@ -121,7 +121,7 @@ def test_naive_update_requires_correct_partition_indices_shape():
 
 
 def test_naive_update_requires_correct_keys_shape():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config()
     module = NaiveMultiPartitionState(config)
@@ -136,7 +136,7 @@ def test_naive_update_requires_correct_keys_shape():
 
 
 def test_naive_update_requires_correct_values_shape():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config()
     module = NaiveMultiPartitionState(config)
@@ -151,7 +151,7 @@ def test_naive_update_requires_correct_values_shape():
 
 
 def test_naive_update_only_modifies_selected_partitions():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(0)
     config = _build_config(num_partitions=4, c=8, d=16)
@@ -176,7 +176,7 @@ def test_naive_update_only_modifies_selected_partitions():
 
 
 def test_naive_update_non_selected_partitions_unchanged():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(1)
     config = _build_config(num_partitions=5, c=4, d=8)
@@ -202,7 +202,7 @@ def test_naive_update_non_selected_partitions_unchanged():
 
 
 def test_naive_update_handles_k_equals_one():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(2)
     config = _build_config(num_partitions=3, c=4, d=8)
@@ -223,7 +223,7 @@ def test_naive_update_handles_k_equals_one():
 
 
 def test_naive_update_handles_multiple_selections_per_token():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(3)
     config = _build_config(num_partitions=4, c=4, d=8)
@@ -244,7 +244,7 @@ def test_naive_update_handles_multiple_selections_per_token():
 
 
 def test_naive_read_requires_correct_partition_indices_shape():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config()
     module = NaiveMultiPartitionState(config)
@@ -263,7 +263,7 @@ def test_naive_read_requires_correct_partition_indices_shape():
 
 
 def test_naive_read_requires_correct_queries_shape():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     config = _build_config()
     module = NaiveMultiPartitionState(config)
@@ -277,7 +277,7 @@ def test_naive_read_requires_correct_queries_shape():
 
 
 def test_naive_read_returns_correct_shape():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(4)
     config = _build_config()
@@ -293,7 +293,7 @@ def test_naive_read_returns_correct_shape():
 
 
 def test_naive_read_sums_over_selected_partitions():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(5)
     config = _build_config(num_partitions=3, c=4, d=8)
@@ -321,7 +321,7 @@ def test_naive_read_sums_over_selected_partitions():
 
 
 def test_naive_read_matches_manual_computation():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(6)
     config = _build_config(num_partitions=2, c=3, d=4)
@@ -345,7 +345,7 @@ def test_naive_read_matches_manual_computation():
 
 
 def test_naive_read_handles_k_equals_one():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(7)
     config = _build_config(num_partitions=3, c=4, d=8)
@@ -367,7 +367,7 @@ def test_naive_read_handles_k_equals_one():
 
 
 def test_naive_read_handles_k_equals_num_partitions():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(8)
     config = _build_config(num_partitions=3, c=4, d=8)
@@ -389,7 +389,7 @@ def test_naive_read_handles_k_equals_num_partitions():
 
 
 def test_naive_state_persists_across_multiple_updates():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(9)
     config = _build_config(num_partitions=3, c=4, d=8)
@@ -417,7 +417,7 @@ def test_naive_state_persists_across_multiple_updates():
 
 
 def test_naive_reset_state_clears_all_partitions():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(10)
     config = _build_config()
@@ -443,7 +443,7 @@ def test_naive_reset_state_clears_all_partitions():
 
 
 def test_naive_state_norms_do_not_collapse():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(11)
     config = _build_config(num_partitions=4, c=8, d=16)
@@ -464,7 +464,7 @@ def test_naive_state_norms_do_not_collapse():
 
 
 def test_naive_update_incremental_matches_batch_computation():
-    from sparse_layers.sse import NaiveMultiPartitionState
+    from sparse_layers.modules import NaiveMultiPartitionState
 
     torch.manual_seed(12)
     config = _build_config(num_partitions=3, c=4, d=8)
@@ -492,7 +492,7 @@ def test_naive_update_incremental_matches_batch_computation():
 
 
 def test_optimized_module_initializes_with_config():
-    from sparse_layers.sse import SSEMultiPartitionState
+    from sparse_layers.modules import SSEMultiPartitionState
 
     config = _build_config()
     module = SSEMultiPartitionState(config)
@@ -504,7 +504,7 @@ def test_optimized_module_initializes_with_config():
 
 
 def test_optimized_states_have_correct_shape():
-    from sparse_layers.sse import SSEMultiPartitionState
+    from sparse_layers.modules import SSEMultiPartitionState
 
     config = _build_config(num_partitions=4, c=128, d=768)
     module = SSEMultiPartitionState(config)
@@ -514,7 +514,7 @@ def test_optimized_states_have_correct_shape():
 
 
 def test_optimized_update_matches_naive_outputs():
-    from sparse_layers.sse import (
+    from sparse_layers.modules import (
         NaiveMultiPartitionState,
         SSEMultiPartitionState,
     )
@@ -538,7 +538,7 @@ def test_optimized_update_matches_naive_outputs():
 
 
 def test_optimized_read_matches_naive_outputs():
-    from sparse_layers.sse import (
+    from sparse_layers.modules import (
         NaiveMultiPartitionState,
         SSEMultiPartitionState,
     )
@@ -566,7 +566,7 @@ def test_optimized_read_matches_naive_outputs():
 
 
 def test_optimized_update_only_modifies_selected_partitions():
-    from sparse_layers.sse import SSEMultiPartitionState
+    from sparse_layers.modules import SSEMultiPartitionState
 
     torch.manual_seed(15)
     config = _build_config(num_partitions=5, c=4, d=8)
@@ -591,7 +591,7 @@ def test_optimized_update_only_modifies_selected_partitions():
 
 
 def test_optimized_memory_isolation_verified():
-    from sparse_layers.sse import SSEMultiPartitionState
+    from sparse_layers.modules import SSEMultiPartitionState
 
     torch.manual_seed(16)
     config = _build_config(num_partitions=4, c=4, d=8)
@@ -614,7 +614,7 @@ def test_optimized_memory_isolation_verified():
 
 
 def test_optimized_reset_state_matches_naive():
-    from sparse_layers.sse import (
+    from sparse_layers.modules import (
         NaiveMultiPartitionState,
         SSEMultiPartitionState,
     )
@@ -644,7 +644,7 @@ def test_optimized_reset_state_matches_naive():
 
 
 def test_both_implementations_handle_zero_sequence_length():
-    from sparse_layers.sse import (
+    from sparse_layers.modules import (
         NaiveMultiPartitionState,
         SSEMultiPartitionState,
     )
@@ -671,7 +671,7 @@ def test_both_implementations_handle_zero_sequence_length():
 
 
 def test_both_implementations_handle_single_batch_token():
-    from sparse_layers.sse import (
+    from sparse_layers.modules import (
         NaiveMultiPartitionState,
         SSEMultiPartitionState,
     )
@@ -698,7 +698,7 @@ def test_both_implementations_handle_single_batch_token():
 
 
 def test_both_implementations_support_float64():
-    from sparse_layers.sse import (
+    from sparse_layers.modules import (
         NaiveMultiPartitionState,
         SSEMultiPartitionState,
     )
@@ -731,7 +731,7 @@ def test_both_implementations_support_float64():
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA not available")
 def test_both_implementations_support_cuda():
-    from sparse_layers.sse import (
+    from sparse_layers.modules import (
         NaiveMultiPartitionState,
         SSEMultiPartitionState,
     )

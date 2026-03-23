@@ -3,15 +3,8 @@ from __future__ import annotations
 from torch import Tensor, nn
 import torch.nn.functional as F
 
-from sparse_layers.layers.butterfly_linear import ButterflyLinear, _is_power_of_two
-
-
-def _next_power_of_two(value: int) -> int:
-    if value <= 0:
-        raise ValueError("value must be a positive integer")
-    if _is_power_of_two(value):
-        return value
-    return 1 << (value - 1).bit_length()
+from sparse_layers.ops.butterfly import _is_power_of_two, _next_power_of_two
+from sparse_layers.modules.butterfly_linear import ButterflyLinear
 
 
 class PaddedButterflyLinear(nn.Module):
@@ -67,4 +60,3 @@ class PaddedButterflyLinear(nn.Module):
 
 
 __all__ = ["PaddedButterflyLinear"]
-

@@ -5,7 +5,8 @@ import math
 import torch
 from torch import Tensor, nn
 
-from sparse_layers.layers.butterfly_linear import ButterflyLinear
+from sparse_layers.ops.butterfly import _is_power_of_two
+from sparse_layers.modules.butterfly_linear import ButterflyLinear
 
 
 class ButterflyMultiHeadAttention(nn.Module):
@@ -85,9 +86,4 @@ class ButterflyMultiHeadAttention(nn.Module):
         return transposed.reshape(batch_size, seq_len, self.d_model)
 
 
-def _is_power_of_two(value: int) -> bool:
-    return value > 0 and (value & (value - 1) == 0)
-
-
 __all__ = ["ButterflyMultiHeadAttention"]
-

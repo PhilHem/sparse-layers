@@ -2,7 +2,7 @@ import pytest
 import torch
 from pydantic import ValidationError
 
-from sparse_layers.sse import (
+from sparse_layers.models import (
     NaiveSSEMultiHeadAttention,
     SSEMultiHeadAttention,
     SSEMultiHeadAttentionConfig,

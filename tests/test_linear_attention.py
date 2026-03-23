@@ -4,7 +4,7 @@ from pydantic import ValidationError
 
 
 def _build_config(**kwargs):
-    from sparse_layers.sse import LinearAttentionConfig
+    from sparse_layers.modules import LinearAttentionConfig
 
     return LinearAttentionConfig(**kwargs)
 
@@ -53,7 +53,7 @@ def test_config_is_immutable():
 
 
 def _build_module(**kwargs):
-    from sparse_layers.sse import LinearAttention
+    from sparse_layers.modules import LinearAttention
 
     return LinearAttention(**kwargs)
 

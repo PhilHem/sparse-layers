@@ -3,7 +3,19 @@ from __future__ import annotations
 import torch
 from torch import Tensor, nn
 
-from sparse_layers.sse.multi_partition_state_config import SSEMultiPartitionStateConfig
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class SSEMultiPartitionStateConfig(BaseModel):
+    """Configuration for the SSE multi-partition state manager."""
+
+    model_config = ConfigDict(frozen=True)
+
+    num_partitions: int = Field(
+        gt=1, description="Number of state partitions"
+    )
+    c: int = Field(gt=0, description="State rows per partition")
+    d: int = Field(gt=0, description="State feature dimension")
 
 
 class NaiveMultiPartitionState(nn.Module):

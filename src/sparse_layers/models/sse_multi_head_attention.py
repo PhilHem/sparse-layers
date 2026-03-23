@@ -13,8 +13,8 @@ from pydantic import (
 )
 from torch import Tensor, nn
 
-from sparse_layers.layers.padded_butterfly_linear import PaddedButterflyLinear
-from sparse_layers.sse.attention import SSEAttention, SSEAttentionConfig
+from sparse_layers.modules.padded_butterfly_linear import PaddedButterflyLinear
+from sparse_layers.modules.sse_attention import SSEAttention, SSEAttentionConfig
 
 
 class SSEMultiHeadAttentionConfig(BaseModel):

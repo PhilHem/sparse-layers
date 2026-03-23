@@ -2,7 +2,7 @@ import pytest
 import torch
 from pydantic import ValidationError
 
-from sparse_layers.sse import SSEPartitionSelector, SSEPartitionSelectorConfig
+from sparse_layers.modules import SSEPartitionSelector, SSEPartitionSelectorConfig
 
 
 def test_config_accepts_valid_values():
