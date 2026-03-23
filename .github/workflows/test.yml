@@ -49,5 +49,8 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install deps
+        run: pip install -e . pyrefly
+
       - name: Pyrefly
-        run: pip install pyrefly && pyrefly check src/
+        run: pyrefly check src/
