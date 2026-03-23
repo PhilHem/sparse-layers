@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.1 - 2026-03-23
+
+### Changed
+
+- Package reorganized into `ops/`, `modules/`, `models/` following the Flash-Attention pattern
+- Baseline implementations (`SimpleMLP`, `CustomMLP`, `CustomLinear`, `MultiHeadAttention`) moved to `models/_baselines.py` — still importable but clearly separated from the public API
+- Config classes merged into their module files (no more separate `*_config.py` files)
+
 ## v0.2.0 - 2026-03-23
 
 Initial public release as `sparse-layers` (renamed from `butterfly-layers`).
